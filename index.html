@@ -42,8 +42,8 @@
             padding: 0 2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* logo left, menu right */
-            height: 70px; /* fixed header height */
+            justify-content: space-between;
+            height: 70px;
         }
 
         .logo {
@@ -51,13 +51,13 @@
             align-items: center;
             justify-content: flex-start;
         }
+
         .logo img {
             width: 200px; 
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
             transition: transform 0.3s ease, filter 0.3s ease;
-            margin: 0;
         }
 
         .logo img:hover {
@@ -225,6 +225,54 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        
+        .carousel {
+            width: 90%;          
+            max-width: 300px;     
+            aspect-ratio: 1 / 1;  
+            margin: 1rem auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        
+        @media (min-width: 768px) {
+            .carousel {
+                max-width: 600px;   
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            animation: slide 12s infinite;
+            transition: opacity 1.5s ease-in-out;
+            background: #0a0a0a; 
+        }
+
+        .carousel img:nth-child(1) { animation-delay: 0s; }
+        .carousel img:nth-child(2) { animation-delay: 3s; }
+        .carousel img:nth-child(3) { animation-delay: 6s; }
+        .carousel img:nth-child(4) { animation-delay: 9s; }
+        .carousel img:nth-child(5) { animation-delay: 12s; }
+
+        @keyframes slide {
+            0% { opacity: 0; }
+            8% { opacity: 1; }
+            33% { opacity: 1; }
+            41% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* Mobile tweaks */
         @media (max-width: 768px) {
             nav ul {
                 flex-wrap: wrap;
@@ -244,45 +292,60 @@
                 font-size: 2.2rem;
             }
 
+            .logo img {
+                width: 150px;
+            }
+
+            .carousel {
+                max-width: 100%;
+                height: 400px;
+            }
+
+            .carousel img {
+                height: 100%;
+            }
+
+            .container {
+                padding: 3rem 1rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
+
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
         }
 
-        .carousel {
-            width: 100%;
-            max-width: 800px;
-            height: 800px;
-            margin: 1rem auto;
-            position: relative;
-            overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .carousel {
+                height: 300px;
+            }
+
+            .btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
         }
-
-        .carousel img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            animation: slide 12s infinite;
-            transition: opacity 1.5s ease-in-out;
-        }
-
-        .carousel img:nth-child(1) { animation-delay: 0s; }
-        .carousel img:nth-child(2) { animation-delay: 3s; }
-        .carousel img:nth-child(3) { animation-delay: 6s; }
-        .carousel img:nth-child(4) { animation-delay: 9s; }
-        .carousel img:nth-child(5) { animation-delay: 12s; }
-
-        @keyframes slide {
-            0% { opacity: 0; }
-            8% { opacity: 1; }    /* fade in */
-            33% { opacity: 1; }   /* stay visible */
-            41% { opacity: 0; }   /* fade out */
-            100% { opacity: 0; }
-        }
-
     </style>
 </head>
 <body>
@@ -301,20 +364,16 @@
     </header>
 
     <section class="hero" id="home">
-    <h1>Members:</h1>
+        <h1>Members:</h1>
 
-    <div class="carousel">
-        <img src="imgs/members/pierre.jpg" alt="@eg6_pierre_95">
-        <img src="imgs/members/charlie.jpg" alt="_iburnoil">
-        <img src="imgs/members/charlie1.jpg" alt="_iburnoil">
-        <img src="imgs/members/enzo.jpg" alt="enzo_caffeinatedmedia">
-        <img src="imgs/members/enzo1.jpg" alt="enzo_caffeinatedmedia">
-    </div>
-    </div>
-
-    
+        <div class="carousel">
+            <img src="imgs/members/pierre.jpg" alt="@eg6_pierre_95">
+            <img src="imgs/members/charlie.jpg" alt="_iburnoil">
+            <img src="imgs/members/charlie1.jpg" alt="_iburnoil">
+            <img src="imgs/members/enzo.jpg" alt="enzo_caffeinatedmedia">
+            <img src="imgs/members/enzo1.jpg" alt="enzo_caffeinatedmedia">
+        </div>
     </section>
-
 
     <section class="container" id="about">
         <h2 class="section-title">About Us</h2>
