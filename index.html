@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
     <title>PHANTOM</title>
     <style>
         * {
@@ -40,23 +41,18 @@
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
+            justify-content: space-between; /* logo left, menu right */
+            height: 70px; /* fixed header height */
         }
 
         .logo {
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: flex-start;
         }
-
-        .logo {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
         .logo img {
-            width: 750px;
+            width: 200px; 
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
@@ -72,7 +68,8 @@
         nav ul {
             list-style: none;
             display: flex;
-            gap: 3rem;
+            gap: 2rem;
+            margin: 0;
         }
 
         nav a {
@@ -247,11 +244,45 @@
                 font-size: 2.2rem;
             }
 
-            .logo img {
-                width: 550px;
-                height: 175px;
-            }
         }
+
+        .carousel {
+            width: 100%;
+            max-width: 800px;
+            height: 800px;
+            margin: 1rem auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            animation: slide 12s infinite;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .carousel img:nth-child(1) { animation-delay: 0s; }
+        .carousel img:nth-child(2) { animation-delay: 3s; }
+        .carousel img:nth-child(3) { animation-delay: 6s; }
+        .carousel img:nth-child(4) { animation-delay: 9s; }
+        .carousel img:nth-child(5) { animation-delay: 12s; }
+
+        @keyframes slide {
+            0% { opacity: 0; }
+            8% { opacity: 1; }    /* fade in */
+            33% { opacity: 1; }   /* stay visible */
+            41% { opacity: 0; }   /* fade out */
+            100% { opacity: 0; }
+        }
+
     </style>
 </head>
 <body>
@@ -270,15 +301,25 @@
     </header>
 
     <section class="hero" id="home">
-        <h1>Members:</h1>
-        <p></p>
-        <a href="#shop" class="btn">Get Started</a>
+    <h1>Members:</h1>
+
+    <div class="carousel">
+        <img src="imgs/members/pierre.jpg" alt="@eg6_pierre_95">
+        <img src="imgs/members/charlie.jpg" alt="_iburnoil">
+        <img src="imgs/members/charlie1.jpg" alt="_iburnoil">
+        <img src="imgs/members/enzo.jpg" alt="enzo_caffeinatedmedia">
+        <img src="imgs/members/enzo1.jpg" alt="enzo_caffeinatedmedia">
+    </div>
+    </div>
+
+    
     </section>
+
 
     <section class="container" id="about">
         <h2 class="section-title">About Us</h2>
         <p class="about-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+            We are a group of friends who share a passion for cars, car culture, and everything automotive. Our goal is to create a welcoming community where car enthusiasts can connect, share their love for cars, and participate in events and activities together. 
         </p>
     </section>
 
