@@ -19,14 +19,14 @@
             background: #0a0a0a;
         }
 
-        header {
-            background: rgba(15, 15, 15, 0.95);
+         header {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            padding: 1rem 0;
             position: sticky;
             top: 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
             z-index: 1000;
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
@@ -37,13 +37,13 @@
         }
 
         nav {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 70px;
+            height: 100px;
         }
 
         .logo {
@@ -53,16 +53,16 @@
         }
 
         .logo img {
-            width: 200px; 
+            width: 250px; 
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));
             transition: transform 0.3s ease, filter 0.3s ease;
         }
 
         .logo img:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6));
         }
 
         nav ul {
@@ -192,11 +192,14 @@
 
         .card h3 {
             color: #ffffff;
+            text-align: center;
             margin-bottom: 1rem;
             font-size: 1.5rem;
         }
 
         .card p {
+            text-align: center;
+            margin-top: 3rem;
             color: #b0b0b0;
             line-height: 1.7;
         }
@@ -253,7 +256,7 @@
             top: 0;
             left: 0;
             opacity: 0;
-            animation: slide 12s infinite;
+            animation: slide 24s infinite;
             transition: opacity 1.5s ease-in-out;
             background: #0a0a0a; 
         }
@@ -263,7 +266,10 @@
         .carousel img:nth-child(3) { animation-delay: 6s; }
         .carousel img:nth-child(4) { animation-delay: 9s; }
         .carousel img:nth-child(5) { animation-delay: 12s; }
-
+        .carousel img:nth-child(6) { animation-delay: 15s; }
+        .carousel img:nth-child(7) { animation-delay: 18s; }
+        .carousel img:nth-child(8) { animation-delay: 21s; }
+        .carousel img:nth-child(9) { animation-delay: 24s; }
         @keyframes slide {
             0% { opacity: 0; }
             8% { opacity: 1; }
@@ -352,7 +358,7 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="imgs/spikyC.png" alt="Logo">
+                <img src="imgs/spiky.png" alt="Logo">
             </div>
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -367,11 +373,15 @@
         <h1>Members:</h1>
 
         <div class="carousel">
-            <img src="imgs/members/pierre.jpg" alt="@eg6_pierre_95">
-            <img src="imgs/members/charlie.jpg" alt="_iburnoil">
-            <img src="imgs/members/charlie1.jpg" alt="_iburnoil">
+            <img src="imgs/members/gage1.jpg" alt="gage_wrx">
+            <img src="imgs/members/gage.jpg" alt="gage_wrx">
             <img src="imgs/members/enzo.jpg" alt="enzo_caffeinatedmedia">
             <img src="imgs/members/enzo1.jpg" alt="enzo_caffeinatedmedia">
+            <img src="imgs/members/canon.jpg" alt="slug350z">
+            <img src="imgs/members/canon1.jpg" alt="slug350z">
+            <img src="imgs/members/pierre.jpg" alt="eg6_pierre_95">
+            <img src="imgs/members/charlie.jpg" alt="_iburnoil">
+            <img src="imgs/members/charlie1.jpg" alt="_iburnoil">
         </div>
     </section>
 
@@ -386,15 +396,17 @@
         <h2 class="section-title">Our Shop</h2>
         <div class="cards">
             <div class="card">
-                <h3>Service One</h3>
+                <h3>Stickers</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
             </div>
             <div class="card">
-                <h3>Service Two</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+                <h3>Apparel</h3>
+                <p>
+                <a href="apparel.html" class="btn">Shop Here</a>
+                </p>
             </div>
             <div class="card">
-                <h3>Service Three</h3>
+                <h3>Accessories</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
             </div>
         </div>
@@ -403,8 +415,8 @@
     <section class="container" id="contact">
         <h2 class="section-title">Contact Us</h2>
         <p class="contact-content">
-            Email: contact@yourwebsite.com<br>
-            Phone: (123) 456-7890
+            <img src="imgs/instagram.png" alt="instagram" style="width:36px; vertical-align:middle; margin-right:8px;">
+            @phantomnwa
         </p>
     </section>
 
