@@ -198,6 +198,16 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
+        .card img {
+            filter: invert(1);
+            width: 100%;              
+            height: 250px;            
+            object-fit: cover;        
+            display: block;           
+        }
+
+        
+
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 40px rgba(255, 255, 255, 0.1);
@@ -205,6 +215,7 @@
         }
 
         .card h3 {
+            object-fit: contain;
             color: #ffffff;
             text-align: center;
             margin-bottom: 1rem;
@@ -414,6 +425,8 @@
 
     <section class="hero" id="home">
         <h2 class="hero-title">Members:</h2>
+        <audio id="bg-music" src="imgs/house.mp3" loop></audio>
+        <button id="music-toggle" style="position: absolute; top: 10px; right: 10px; padding: 10px 20px; background: rgba(255,255,255,0.9); border: none; border-radius: 25px; cursor: pointer; font-weight: bold; z-index: 10;">🔊 Play Music</button>
         <div class="hero-content">
             <div class="carousel">
                 <img src="imgs/members/gage1.jpg" alt="gage_wrx">
@@ -441,7 +454,7 @@
                     <source src="imgs/videos/austin.mp4" type="video/mp4">
                 </video>
                 <video muted playsinline>
-                    <source src="imgs/videos/noel.mp4" type="video/mp4">
+                    <source src="imgs/videos/noel1.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
@@ -459,10 +472,14 @@
         <div class="cards">
             <div class="card">
                 <h3>Stickers</h3>
-                <p><a href="stickers/stickerList.html" class="btn">Shop Here</a></p>
+                <img src="imgs/Merch/phantom.png">
+                <p>
+                    <a href="stickers/stickerList.html" class="btn">Shop Here</a>
+                </p>
             </div>
             <div class="card">
                 <h3>Apparel</h3>
+                <img src="imgs/Merch/shirtdrop.png">
                 <p>
                     <a href="apparel/home.html" class="btn">Shop Here</a>
                 </p>
@@ -475,7 +492,9 @@
         <p class="contact-content">
             <img src="imgs/instagram.png" alt="instagram" style="width:36px; vertical-align:middle; margin-right:8px;">
             <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener noreferrer">@phantom.nwa</a>
+            
         </p>
+        <a href="https://forms.gle/rMgB2YeTz7c9rMPb8" target="_blank" rel="noopener noreffer">Want to become a member? Fill out this form</a>
     </section>
 
     <footer>
@@ -483,6 +502,7 @@
     </footer>
 
     <script>
+
         const header = document.querySelector('header');
 
         window.addEventListener('scroll', () => {
@@ -535,6 +555,23 @@
                 showVideo(0);
             }
         }
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const music = document.getElementById('bg-music');
+        const btn = document.getElementById('music-toggle');
+
+        btn.addEventListener('click', () => {
+            if (music.paused) {
+            music.play().then(() => {
+                btn.textContent = '🔇 Pause Music';
+            }).catch(err => console.log('Playback error:', err));
+            } else {
+            music.pause();
+            btn.textContent = '🔊 Play Music';
+            }
+        });
+        });
     </script>
 </body>
 </html>
