@@ -1,340 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../imgs/favicon.png" type="image/png">
-    <title>Apparel - PHANTOM</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../imgs/favicon.png" type="image/png">
+<title>Merch - PHANTOM</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #e0e0e0;
-            background: #0a0a0a;
-            min-height: 100vh;
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #e0e0e0;
+        background: #0a0a0a;
+        min-height: 100vh;
+    }
 
-        header {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            height: 100px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+    header {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        backdrop-filter: blur(10px);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        height: 100px;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+        z-index: 1000;
+    }
 
-        header.hidden {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
+    nav {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100px;
+    }
 
-        nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 100px;
-        }
+    .logo img { width: 250px; height: auto; object-fit: contain; filter: drop-shadow(0 0 25px rgba(255,255,255,0.4)); transition: transform 0.3s ease, filter 0.3s ease; }
+    .logo img:hover { transform: scale(1.08); filter: drop-shadow(0 0 40px rgba(255,255,255,0.6)); }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
+    nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; }
+    nav a { color: #b0b0b0; text-decoration: none; font-size: 1.1rem; position: relative; transition: color 0.3s ease; }
+    nav a:hover { color: #fff; }
+    nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: #fff; transition: width 0.3s ease; }
+    nav a:hover::after { width: 100%; }
 
-        .logo img {
-            width: 250px; 
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
+    .container { max-width: 2000px; margin: 0 auto; padding: 5rem 3rem; }
 
-        .logo img:hover {
-            transform: scale(1.08);
-            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6));
-        }
+    .section-title { text-align: center; font-size: 2.8rem; margin-bottom: 3.5rem; color: #fff; font-weight: 600; }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            margin: 0;
-        }
+    .product-content { display: flex; gap: 4rem; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
 
-        nav a {
-            color: #b0b0b0;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-            position: relative;
-        }
+    .product-image { filter: invert(1); }
+    .product-image img { display: block; max-width: 450px; width: 100%; height: auto; border-radius: 10px; transition: transform 0.3s ease; }
+    .product-image:hover img { transform: scale(1.05); }
 
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #ffffff;
-            transition: width 0.3s ease;
-        }
+    .product-details { max-width: 400px; color: #e0e0e0; }
 
-        nav a:hover {
-            color: #ffffff;
-        }
+    .product-price { font-size: 1.8rem; font-weight: bold; margin-bottom: 1rem; }
+    .product-description { margin-bottom: 1.5rem; line-height: 1.5; }
 
-        nav a:hover::after {
-            width: 100%;
-        }
+    /* Square Buy Now Button */
+    #square-buy-now {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 220px;
+        height: 50px;
+        background: #111;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    #square-buy-now:hover { background: #1a1a1a; }
 
-        .container {
-            max-width: 2000px;
-            margin: 0 auto;
-            padding: 5rem 3rem;
-        }
+    footer { background: #0f0f0f; color: #808080; text-align: center; padding: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 150px; }
 
-        .section-title {
-            text-align: center;
-            font-size: 2.8rem;
-            margin-bottom: 3.5rem;
-            color: #ffffff;
-            font-weight: 600;
-        }
+    @media (max-width: 768px) {
+        nav ul { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+        .section-title { font-size: 2.2rem; }
+        .logo img { width: 150px; }
+        .container { padding: 3rem 1rem; }
+    }
 
-        /* Product styles */
-        .product-content {
-            display: flex;
-            gap: 4rem;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            justify-content: center;
-        }
-
-        .product-image {
-            filter: invert(1);
-            position: relative;
-        }
-
-        .product-image img {
-            display: block;
-            max-width: 450px; /* made it slightly larger */
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        /* Hover effect to simulate “model view” */
-        .product-image:hover img {
-            transform: scale(1.05);
-        }
-
-        .product-details {
-            max-width: 400px;
-            color: #e0e0e0;
-        }
-
-        .product-description {
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .product-price {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .product-details label {
-            display: block;
-            margin: 0.5rem 0 0.25rem;
-        }
-
-        .product-details select,
-        .product-details input[type="number"] {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-        }
-
-        .product-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            text-align: center;
-            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
-            color: #000;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-            padding: 0.75rem 1.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255,255,255,0.3);
-        }
-
-        footer {
-            background: #0f0f0f;
-            color: #808080;
-            text-align: center;
-            padding: 2.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto;
-        }
-
-        @media (max-width: 768px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .section-title {
-                font-size: 2.2rem;
-            }
-
-            .logo img {
-                width: 150px;
-            }
-
-            .carousel {
-                max-width: 100%;
-                height: 400px;
-            }
-
-            .container {
-                padding: 3rem 1rem;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .card {
-                padding: 2rem;
-            }
-
-            .btn {
-                padding: 0.8rem 2rem;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .section-title {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6TRGC1VWSQ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-6TRGC1VWSQ');
-</script>
-
+    @media (max-width: 480px) { .section-title { font-size: 1.8rem; } }
+</style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <a href="../index.html">
-                    <img src="../imgs/frontembossed.png" alt="Logo">
-                </a>
-            </div>
-            <ul>
-                <li><a href="../index.html#home">Home</a></li>
-                <li><a href="../index.html#about">About</a></li>
-                <li><a href="../index.html#shop">Shop</a></li>
-                <li><a href="../index.html#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <section class="container">
-        <h2 class="section-title">OG Shooting Star Logo</h2>
-        <div class="product-content">
-            <div class="product-image">
-                <img src="../imgs/Merch/phantom.png" alt="OG Shooting Star">
-            </div>
-            <div class="product-details">
-                <p class="product-price">$**.**</p>
-                <p class="product-description">
-                    <p class="product-description">12in x 6in (LxW)</p>
-                    Note: All purchases are made to order. Please allow up to 2 weeks to receive your product.
-                </p>
-                
+<header>
+    <nav>
+        <div class="logo">
+            <a href="../index.html"><img src="../imgs/frontembossed.png" alt="Logo"></a>
+        </div>
+        <ul>
+            <li><a href="../index.html#home">Home</a></li>
+            <li><a href="../index.html#about">About</a></li>
+            <li><a href="../index.html#shop">Shop</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 
-                
-                
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" value="1" min="1">
+<section class="container">
+    <h2 class="section-title">OG Shooting Star Logo Sticker</h2>
+    <div class="product-content">
 
-                <div class="product-buttons">
-                    <a href="#" class="btn">Coming Soon</a>
-                </div>
+        <!-- Product Image -->
+        <div class="product-image">
+            <img src="../imgs/Merch/phantom.png" alt="OG Shooting Star">
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details">
+            <p class="product-price">$5.00</p>
+            <p class="product-description">
+                12in x 6in (LxW)<br>
+                Note: All purchases are made to order. Please allow up to 2 weeks to receive your product.
+            </p>
+
+            <div class="product-buttons">
+                <a id="square-buy-now" href="https://square.link/u/U6XH8q23?src=embed" target="_blank">Buy Now</a>
             </div>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; 2025 PHANTOM. All rights reserved.</p>
-    </footer>
+    </div>
+</section>
 
-    <script>
-        let lastScroll = 0;
-        const header = document.querySelector('header');
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                header.classList.add('hidden');
-            } else {
-                header.classList.remove('hidden');
-            }
-            
-            lastScroll = currentScroll;
-        });
-    </script>
+<script>
+    // Hide header on scroll
+    let lastScroll = 0;
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > 100) { header.classList.add('hidden'); }
+        else { header.classList.remove('hidden'); }
+        lastScroll = currentScroll;
+    });
+</script>
+
+<footer>
+    <p>&copy; 2025 PHANTOM. All rights reserved.</p>
+</footer>
+
 </body>
 </html>

@@ -255,6 +255,28 @@
             }
         }
 
+        .cart {
+            position: fixed;
+            top: 100px; /* under the header */
+            right: -400px;
+            width: 350px;
+            height: calc(100% - 100px);
+            background-color: #111;
+            color: #fff;
+            padding: 20px;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.4);
+            transition: right 0.25s ease-in-out;
+            overflow-y: auto;
+            z-index: 999;
+    }
+        .cart.open { right: 0; }
+        .cart h2 { margin-bottom: 15px; font-size: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .cart-total { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; }
+        #cart-items li { display: flex; justify-content: space-between; margin: 10px 0; }
+        #cart-items div { display: flex; align-items: center; gap: 0.5rem; }
+
+
+
         @media (max-width: 480px) {
             .section-title {
                 font-size: 1.8rem;
@@ -285,9 +307,19 @@
                 <li><a href="../index.html#about">About</a></li>
                 <li><a href="../index.html#shop">Shop</a></li>
                 <li><a href="../index.html#contact">Contact</a></li>
+                <li><a href="#" id="cart-button">🛒</a></li>
             </ul>
         </nav>
     </header>
+
+    <div id="cart" class="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div class="cart-total">
+        <p>Total: $<span id="cart-total">0.00</span></p>
+        <button id="checkout" class="btn">Checkout</button>
+    </div>
+</div>
 
     <section class="container">
         <h2 class="section-title">Spike Logo Hoodie</h2>
@@ -313,8 +345,8 @@
                 <input type="number" id="quantity" value="1" min="1">
 
                 <div class="product-buttons">
-                    <a href="#" class="btn">Coming Soon</a>
-                </div>
+                <a href="#" id="add-to-cart" class="btn">Add to Cart</a>
+            </div>
             </div>
         </div>
     </section>
@@ -323,21 +355,100 @@
         <p>&copy; 2025 PHANTOM. All rights reserved.</p>
     </footer>
 
+
     <script>
-        let lastScroll = 0;
-        const header = document.querySelector('header');
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                header.classList.add('hidden');
-            } else {
-                header.classList.remove('hidden');
-            }
-            
-            lastScroll = currentScroll;
+    // Header hide on scroll
+    let lastScroll = 0;
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > 100) header.classList.add('hidden');
+        else header.classList.remove('hidden');
+        lastScroll = currentScroll;
+    });
+
+    // Cart logic
+    let cart = [];
+    const cartEl = document.getElementById("cart");
+    const cartItemsEl = document.getElementById("cart-items");
+    const cartTotalEl = document.getElementById("cart-total");
+    const addToCartBtn = document.getElementById("add-to-cart");
+    const cartButton = document.getElementById("cart-button");
+
+    // Load cart from localStorage
+    window.addEventListener("load", () => {
+        const storedCart = localStorage.getItem("phantomCart");
+        if (storedCart) {
+            cart = JSON.parse(storedCart);
+            updateCart();
+        }
+    });
+
+    // Add item
+    addToCartBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const name = "Spike Logo Hoodie";
+        const price = 50.00; 
+        const img = "../imgs/Merch/hoodiedrop.png";
+        const quantity = parseInt(document.getElementById("quantity").value);
+
+        const existingItem = cart.find(item => item.name === name);
+        if (existingItem) existingItem.quantity += quantity;
+        else cart.push({ name, price, img, quantity });
+
+        saveCart();
+        updateCart();
+        openCart();
+    });
+
+    cartButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        openCart();
+    });
+
+    function updateCart() {
+        cartItemsEl.innerHTML = "";
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span>${item.name}</span>
+                <div>
+                    
+                    <input type="number" value="${item.quantity}" min="1" data-index="${index}" class="quantity-input">
+                    
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `;
+            cartItemsEl.appendChild(li);
+            total += item.price * item.quantity;
         });
-    </script>
+
+        cartTotalEl.textContent = total.toFixed(2);
+
+        
+
+        cartItemsEl.querySelectorAll(".quantity-input").forEach(input => {
+            input.addEventListener("change", () => {
+                const i = input.dataset.index;
+                const val = parseInt(input.value);
+                if (val < 1) cart.splice(i, 1);
+                else cart[i].quantity = val;
+                saveCart();
+                updateCart();
+            });
+        });
+    }
+
+    function openCart() { cartEl.classList.add("open"); }
+    function saveCart() { localStorage.setItem("phantomCart", JSON.stringify(cart)); }
+
+    window.addEventListener("click", (e) => {
+        if (!cartEl.contains(e.target) && e.target.id !== "add-to-cart" && e.target.id !== "cart-button") {
+            cartEl.classList.remove("open");
+        }
+    });
+</script>
 </body>
 </html>
