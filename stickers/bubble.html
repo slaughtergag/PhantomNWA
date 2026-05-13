@@ -14,6 +14,8 @@
         color: #e0e0e0;
         background: #0a0a0a;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     header {
@@ -38,16 +40,39 @@
         height: 100px;
     }
 
-    .logo img { width: 250px; height: auto; object-fit: contain; filter: drop-shadow(0 0 25px rgba(255,255,255,0.4)); transition: transform 0.3s ease, filter 0.3s ease; }
+    .logo img { left: 350px; width: 250px; height: auto; object-fit: contain; filter: drop-shadow(0 0 25px rgba(255,255,255,0.4)); transition: transform 0.3s ease, filter 0.3s ease; }
     .logo img:hover { transform: scale(1.08); filter: drop-shadow(0 0 40px rgba(255,255,255,0.6)); }
+    .logo a {
+        display: inline-block;
+        line-height: 0;
+        position: relative;
+         /* Match the image width */
+    }
 
+    .logo a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;        /* right at the bottom edge of the image */
+        left: 0;
+        width: 0px;
+        height: 2px;
+        bottom: 60px; /* Adjust this value to position the line just below the image */
+        background: #fff;
+        transition: width 0.3s ease;
+        display: none;
+    }
+
+    .logo a:hover::after {
+        width: 100%;
+        width: 150px; /* Match the image width */
+    }
     nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; }
     nav a { color: #b0b0b0; text-decoration: none; font-size: 1.1rem; position: relative; transition: color 0.3s ease; }
     nav a:hover { color: #fff; }
     nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: #fff; transition: width 0.3s ease; }
     nav a:hover::after { width: 100%; }
 
-    .container { max-width: 2000px; margin: 0 auto; padding: 5rem 3rem; }
+    .container { max-width: 2000px; margin: 0 auto; padding: 5rem 3rem; flex: 1; }
 
     .section-title { text-align: center; font-size: 2.8rem; margin-bottom: 3.5rem; color: #fff; font-weight: 600; }
 
@@ -82,7 +107,7 @@
     }
     .btn:hover { background: #1a1a1a; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
 
-    footer { background: #0f0f0f; color: #808080; text-align: center; padding: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 150px; }
+    footer { background: #0f0f0f; color: #808080; text-align: center; padding: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
 
     @media (max-width: 768px) {
         nav ul { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
