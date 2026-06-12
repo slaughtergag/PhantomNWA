@@ -139,17 +139,6 @@
                 rgba(0,0,0,0.85) 100%);
         }
 
-        /* subtle radial glow behind logo */
-        .hero-glow {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
-            z-index: 1;
-            pointer-events: none;
-        }
-
         .hero-content {
             position: relative;
             text-align: center;
@@ -219,11 +208,12 @@
             box-shadow: var(--glow-sm);
         }
 
+        /* FIX: Use left:0/right:0 instead of left:50%+translateX for iOS Safari centering */
         .hero-scroll {
             position: absolute;
             bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -846,7 +836,6 @@
 <!-- ── HERO ── -->
 <section id="hero">
     <div class="hero-bg"></div>
-    <div class="hero-glow"></div>
     <div class="hero-content">
         <img src="imgs/frontembossed.png" alt="PHANTOM" class="hero-logo-img">
         <p class="hero-tagline"></p>
@@ -918,28 +907,23 @@
         </div>
         <div class="reels-grid">
             <div class="reel-card">
-                <video src="members/gage/gage.mp4" muted loop playsinline preload="none"></video>
+                <video src="members/gage/gage.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="members/gage/1.PNG" alt="Reel 1" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/ian.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/ian.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/ian.jpeg" alt="Reel 2" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/noel.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/noel.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/noel.png" alt="Reel 3" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/noel1.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/noel1.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/noel1.png" alt="Reel 4" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="reel-card">
-                <video src="imgs/videos/jareth.mp4" muted loop playsinline preload="none"></video>
-                <img src="imgs/members/jareth.jpg" alt="Reel 5" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
         </div>
@@ -1032,13 +1016,46 @@
         observer.observe(el);
     });
 
-    document.querySelectorAll('.reel-card').forEach(card => {
-        const video = card.querySelector('video');
-        card.addEventListener('mouseenter', () => { if (video) video.play(); });
-        card.addEventListener('mouseleave', () => {
-            if (video) { video.pause(); video.currentTime = 0; }
-        });
+    // Detect touch device (iOS, Android)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    // Ensure all videos have correct iOS attributes set via JS too
+    document.querySelectorAll('.reel-card video').forEach(video => {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
     });
+
+    if (!isTouchDevice) {
+        // Desktop: hover to play/pause
+        document.querySelectorAll('.reel-card').forEach(card => {
+            const video = card.querySelector('video');
+            if (!video) return;
+            card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+        });
+    } else {
+        // iOS / touch: autoplay when card is ≥50% visible, pause when out of view
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                const video = card.querySelector('video');
+                const img = card.querySelector('img');
+                if (!video) return;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    video.play().catch(() => {});
+                    if (img) img.style.opacity = '0';
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                    if (img) img.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.reel-card').forEach(card => videoObserver.observe(card));
+    }
 </script>
 
 </body>
