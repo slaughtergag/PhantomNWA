@@ -229,7 +229,26 @@
         border-color: var(--white); color: var(--white);
         box-shadow: 0 0 0 1px rgba(255,255,255,0.15), var(--glow-sm);
     }
+
     .size-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    
+    .inventory-status {
+    margin-top: 0.65rem;
+    min-height: 16px;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    }
+
+    .inventory-status.low {
+        color: var(--white);
+    }
+
+    .inventory-status.sold-out {
+        color: var(--gray);
+    }
 
     /* ── BUY BUTTON ── */
     .product-buttons { text-align: center; }
@@ -329,7 +348,7 @@
         <!-- DETAILS -->
         <div class="product-details">
 
-            <p class="product-price" id="productPrice">$X.XX</p>
+            <p class="product-price" id="productPrice">$60.00</p>
 
             <p class="product-description">
                 Soft, comfortable cotton hoodie<br>
@@ -338,8 +357,15 @@
             </p>
 
             <div class="size-selector">
-                <div class="color-label">Size: <span id="sizeLabel">M</span></div>
-                <div class="size-swatches" id="sizeSwatches"><!-- built by JS from variants[currentColor] --></div>
+                <div class="color-label">
+                    Size: <span id="sizeLabel">M</span>
+                </div>
+
+                <div class="size-swatches" id="sizeSwatches"></div>
+
+                <div class="inventory-status" id="inventoryStatus">
+                    Checking availability...
+                </div>
             </div>
 
             <div class="product-buttons" style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
@@ -358,152 +384,787 @@
 
 <script src="../cart.js"></script>
 <script>
-    // ── CONFIGURE PER PRODUCT ────────────────────────────────────────────
-    // ⚠️ REQUIRED: replace every 'REPLACE_WITH_SQUARE_CATALOG_ID' below with
-    // the real Square Catalog Object ID for THAT color+size combination
-    // (see Square Dashboard → Items & Orders → Items → this item's
-    // variations). Each size is normally its own catalog variation with
-    // its own ID, and can have its own price too.
+    // ── PRODUCT CONFIGURATION ────────────────────────────────────────────
     const variants = {
-    white: {
-        S:  { price: 60.00, catalogId: 'OPMVSOEYRLBUX4J5PZPXHIBS' },
-        M:  { price: 60.00, catalogId: '3FMZ2KDYMOORGMGB4TXDDEOY' },
-        L:  { price: 60.00, catalogId: 'BVZS2PP7QJFTDJGC6FBTIS66' },
-        XL: { price: 60.00, catalogId: 'WF5YP7YZTUL6TYYPY7MKEW6Y' }
-    }
+        white: {
+            S:  { price: 60.00, catalogId: 'OPMVSOEYRLBUX4J5PZPXHIBS' },
+            M:  { price: 60.00, catalogId: '3FMZ2KDYMOORGMGB4TXDDEOY' },
+            L:  { price: 60.00, catalogId: 'BVZS2PP7QJFTDJGC6FBTIS66' },
+            XL: { price: 60.00, catalogId: 'WF5YP7YZTUL6TYYPY7MKEW6Y' }
+        }
     };
+
     const PRODUCT_NAME = 'Build your passion';
     const PRODUCT_IMG  = '../imgs/Front, White.png';
-    // ────────────────────────────────────────────────────────────────────
 
+    // Your Cloudflare Worker
+    const API_BASE = 'https://checkout.phantomnwa.shop';
+
+    // ── STATE ────────────────────────────────────────────────────────────
     let currentColor = 'white';
     let currentSize  = 'M';
 
-    // ── CAROUSEL ────────────────────────────────────────────────────────
-    const slidesEl  = document.getElementById('slides');
-    const prevBtn   = document.getElementById('prevBtn');
-    const nextBtn   = document.getElementById('nextBtn');
-    const dotsWrap  = document.getElementById('dots');
-    const slideEls  = slidesEl.querySelectorAll('.slide');
-    const total     = slideEls.length;
-    let current     = 0;
+    let inventory = {};
+    let inventoryLoaded = false;
+
+    // ── CAROUSEL ─────────────────────────────────────────────────────────
+    const slidesEl = document.getElementById('slides');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsWrap = document.getElementById('dots');
+
+    const slideEls = slidesEl.querySelectorAll('.slide');
+    const total = slideEls.length;
+
+    let current = 0;
 
     slideEls.forEach((_, i) => {
         const d = document.createElement('div');
         d.className = 'dot' + (i === 0 ? ' active' : '');
+
         d.addEventListener('click', () => goTo(i));
+
         dotsWrap.appendChild(d);
     });
 
     function goTo(n) {
         current = Math.max(0, Math.min(n, total - 1));
-        slidesEl.style.transform = `translateX(-${current * 100}%)`;
-        dotsWrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+
+        slidesEl.style.transform =
+            `translateX(-${current * 100}%)`;
+
+        dotsWrap
+            .querySelectorAll('.dot')
+            .forEach((d, i) => {
+                d.classList.toggle(
+                    'active',
+                    i === current
+                );
+            });
+
         prevBtn.disabled = current === 0;
         nextBtn.disabled = current === total - 1;
     }
 
-    prevBtn.addEventListener('click', () => goTo(current - 1));
-    nextBtn.addEventListener('click', () => goTo(current + 1));
+    prevBtn.addEventListener(
+        'click',
+        () => goTo(current - 1)
+    );
 
+    nextBtn.addEventListener(
+        'click',
+        () => goTo(current + 1)
+    );
+
+    // ── MOBILE SWIPE ─────────────────────────────────────────────────────
     let touchStartX = 0;
-    slidesEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    slidesEl.addEventListener('touchend', e => {
-        const diff = touchStartX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
-    });
+
+    slidesEl.addEventListener(
+        'touchstart',
+        e => {
+            touchStartX = e.touches[0].clientX;
+        },
+        { passive: true }
+    );
+
+    slidesEl.addEventListener(
+        'touchend',
+        e => {
+            const diff =
+                touchStartX -
+                e.changedTouches[0].clientX;
+
+            if (Math.abs(diff) > 40) {
+                goTo(
+                    diff > 0
+                        ? current + 1
+                        : current - 1
+                );
+            }
+        }
+    );
 
     goTo(0);
 
-    // ── COLOR VARIANT ────────────────────────────────────────────────────
-    const imageWrap = document.getElementById('productImageWrap');
-    const priceEl   = document.getElementById('productPrice');
-    const buyBtn    = document.getElementById('buyBtn');
-    // FIXED: this page has no #colorName element (single-color product),
-    // so this used to throw a TypeError every time selectVariant() ran.
-    // Guarding it means this same script also works unmodified on future
-    // multi-color product pages that DO include a #colorName element.
-    const colorName    = document.getElementById('colorName');
-    const swatches     = document.querySelectorAll('.swatch');
-    const addBtn       = document.getElementById('addToCartBtn');
-    const sizeSwatches = document.getElementById('sizeSwatches');
-    const sizeLabel    = document.getElementById('sizeLabel');
+    // ── ELEMENTS ─────────────────────────────────────────────────────────
+    const imageWrap =
+        document.getElementById('productImageWrap');
 
+    const priceEl =
+        document.getElementById('productPrice');
+
+    const buyBtn =
+        document.getElementById('buyBtn');
+
+    const colorName =
+        document.getElementById('colorName');
+
+    const swatches =
+        document.querySelectorAll('.swatch');
+
+    const addBtn =
+        document.getElementById('addToCartBtn');
+
+    const sizeSwatches =
+        document.getElementById('sizeSwatches');
+
+    const sizeLabel =
+        document.getElementById('sizeLabel');
+
+    const inventoryStatus =
+        document.getElementById('inventoryStatus');
+
+    // ── VARIANT ──────────────────────────────────────────────────────────
     function currentVariant() {
-        return variants[currentColor] && variants[currentColor][currentSize];
+        return (
+            variants[currentColor] &&
+            variants[currentColor][currentSize]
+        );
     }
 
-    function refreshPriceAndButton() {
-        const v = currentVariant();
-        if (!v) return;
-        priceEl.textContent = '$' + v.price.toFixed(2);
-        if (buyBtn) buyBtn.href = '#'; // wire up a per-variant Square link here if you use direct "Buy Now" links
+    // ── INVENTORY ────────────────────────────────────────────────────────
+    function getStock(catalogId) {
+
+        if (!inventory[catalogId]) {
+            return 0;
+        }
+
+        const item = inventory[catalogId];
+
+        if (
+            item.state &&
+            item.state !== 'IN_STOCK'
+        ) {
+            return 0;
+        }
+
+        return Math.max(
+            0,
+            Number(item.quantity || 0)
+        );
     }
 
-    function renderSizeButtons() {
-        const sizes = Object.keys(variants[currentColor] || {});
+    async function loadInventory() {
+
+        inventoryStatus.textContent =
+            'Checking availability...';
+
+        inventoryStatus.className =
+            'inventory-status';
+
+        try {
+
+            const ids = [];
+
+            Object.values(
+                variants[currentColor]
+            ).forEach(variant => {
+
+                if (variant.catalogId) {
+                    ids.push(variant.catalogId);
+                }
+
+            });
+
+            const response =
+                await fetch(
+                    `${API_BASE}/inventory?ids=${encodeURIComponent(ids.join(','))}`,
+                    {
+                        method: 'GET',
+                        cache: 'no-store'
+                    }
+                );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Inventory request failed: ${response.status}`
+                );
+            }
+
+            const data =
+                await response.json();
+
+            inventory =
+                data.inventory || {};
+
+            inventoryLoaded = true;
+
+            renderSizeButtons();
+            updateCurrentSelection();
+
+        }
+        catch (error) {
+
+            console.error(
+                'Inventory error:',
+                error
+            );
+
+            inventoryLoaded = false;
+
+            inventoryStatus.textContent =
+                'Availability unavailable';
+
+            inventoryStatus.className =
+                'inventory-status';
+
+            // Don't disable everything if the
+            // inventory service temporarily fails.
+            renderSizeButtons(false);
+        }
+    }
+
+    // ── SIZE BUTTONS ─────────────────────────────────────────────────────
+    function renderSizeButtons(
+        useInventory = true
+    ) {
+
+        const sizes =
+            Object.keys(
+                variants[currentColor] || {}
+            );
+
         sizeSwatches.innerHTML = '';
-        sizes.forEach((size) => {
-            const btn = document.createElement('button');
+
+        sizes.forEach(size => {
+
+            const variant =
+                variants[currentColor][size];
+
+            const stock =
+                useInventory
+                    ? getStock(variant.catalogId)
+                    : null;
+
+            const btn =
+                document.createElement('button');
+
             btn.type = 'button';
-            btn.className = 'size-btn' + (size === currentSize ? ' active' : '');
+
+            btn.className =
+                'size-btn' +
+                (
+                    size === currentSize
+                        ? ' active'
+                        : ''
+                );
+
             btn.textContent = size;
-            btn.addEventListener('click', () => selectSize(size));
+
+            if (
+                useInventory &&
+                stock <= 0
+            ) {
+
+                btn.disabled = true;
+
+                btn.title =
+                    `${size} — Sold Out`;
+
+            }
+            else {
+
+                btn.addEventListener(
+                    'click',
+                    () => selectSize(size)
+                );
+
+            }
+
             sizeSwatches.appendChild(btn);
         });
+
+        // If currently selected size is sold out,
+        // automatically select the first available size.
+        if (useInventory) {
+
+            const current =
+                variants[currentColor][currentSize];
+
+            const currentStock =
+                current
+                    ? getStock(current.catalogId)
+                    : 0;
+
+            if (currentStock <= 0) {
+
+                const firstAvailable =
+                    sizes.find(size => {
+
+                        return (
+                            getStock(
+                                variants[currentColor][size]
+                                    .catalogId
+                            ) > 0
+                        );
+
+                    });
+
+                if (firstAvailable) {
+                    currentSize =
+                        firstAvailable;
+                }
+            }
+        }
+
+        // Update active button
+        sizeSwatches
+            .querySelectorAll('.size-btn')
+            .forEach(btn => {
+
+                btn.classList.toggle(
+                    'active',
+                    btn.textContent === currentSize
+                );
+
+            });
+
+        if (sizeLabel) {
+            sizeLabel.textContent =
+                currentSize;
+        }
     }
 
+    // ── SIZE SELECTION ───────────────────────────────────────────────────
     function selectSize(size) {
-        if (!variants[currentColor] || !variants[currentColor][size]) return;
-        currentSize = size;
-        if (sizeLabel) sizeLabel.textContent = size;
-        sizeSwatches.querySelectorAll('.size-btn').forEach((b) => {
-            b.classList.toggle('active', b.textContent === size);
-        });
-        refreshPriceAndButton();
-    }
 
-    function selectVariant(color) {
-        if (!variants[color]) return;
-        currentColor = color;
-        // Default to the first available size for this color, unless the
-        // currently selected size also exists for it.
-        const sizesForColor = Object.keys(variants[color]);
-        if (!sizesForColor.includes(currentSize)) {
-            currentSize = sizesForColor[0];
-        }
-        imageWrap.classList.toggle('variant-black', color === 'black');
-        if (colorName) {
-            colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1);
-        }
-        swatches.forEach(s => s.classList.toggle('active', s.dataset.color === color));
-        renderSizeButtons();
-        if (sizeLabel) sizeLabel.textContent = currentSize;
-        refreshPriceAndButton();
-    }
-
-    swatches.forEach(s => s.addEventListener('click', () => selectVariant(s.dataset.color)));
-
-    addBtn.addEventListener('click', () => {
-        const v = currentVariant();
-        if (!v) {
-            alert('Please select a size.');
+        if (
+            !variants[currentColor] ||
+            !variants[currentColor][size]
+        ) {
             return;
         }
-        window.PhantomCart.addItem({
-            id:      v.catalogId,   // the real Square catalog ID for this color+size combo
-            name:    PRODUCT_NAME,
-            color:   currentColor,
-            size:    currentSize,
-            price:   v.price,
-            image:   PRODUCT_IMG,
-            noFilter: true,
+
+        const variant =
+            variants[currentColor][size];
+
+        // Don't allow selecting a known
+        // sold-out variation.
+        if (inventoryLoaded) {
+
+            const stock =
+                getStock(variant.catalogId);
+
+            if (stock <= 0) {
+                return;
+            }
+        }
+
+        currentSize =
+            size;
+
+        if (sizeLabel) {
+            sizeLabel.textContent =
+                size;
+        }
+
+        sizeSwatches
+            .querySelectorAll('.size-btn')
+            .forEach(btn => {
+
+                btn.classList.toggle(
+                    'active',
+                    btn.textContent === size
+                );
+
+            });
+
+        refreshPriceAndButton();
+        updateInventoryMessage();
+    }
+
+    // ── COLOR SELECTION ──────────────────────────────────────────────────
+    function selectVariant(color) {
+
+        if (!variants[color]) {
+            return;
+        }
+
+        currentColor =
+            color;
+
+        const sizesForColor =
+            Object.keys(
+                variants[color]
+            );
+
+        if (
+            !sizesForColor.includes(
+                currentSize
+            )
+        ) {
+            currentSize =
+                sizesForColor[0];
+        }
+
+        imageWrap.classList.toggle(
+            'variant-black',
+            color === 'black'
+        );
+
+        if (colorName) {
+
+            colorName.textContent =
+                color.charAt(0).toUpperCase() +
+                color.slice(1);
+        }
+
+        swatches.forEach(s => {
+
+            s.classList.toggle(
+                'active',
+                s.dataset.color === color
+            );
+
         });
-        addBtn.textContent = 'Added ✓';
-        setTimeout(() => addBtn.textContent = 'Add to Cart', 1500);
+
+        renderSizeButtons();
+
+        if (sizeLabel) {
+            sizeLabel.textContent =
+                currentSize;
+        }
+
+        refreshPriceAndButton();
+
+        // Reload inventory for this color
+        loadInventory();
+    }
+
+    swatches.forEach(s => {
+
+        s.addEventListener(
+            'click',
+            () => selectVariant(
+                s.dataset.color
+            )
+        );
+
     });
 
-    selectVariant('white');
+    // ── PRICE ────────────────────────────────────────────────────────────
+    function refreshPriceAndButton() {
+
+        const v =
+            currentVariant();
+
+        if (!v) {
+            return;
+        }
+
+        priceEl.textContent =
+            '$' + v.price.toFixed(2);
+
+        if (buyBtn) {
+            buyBtn.href = '#';
+        }
+    }
+
+    // ── INVENTORY MESSAGE ────────────────────────────────────────────────
+    function updateInventoryMessage() {
+
+        if (!inventoryLoaded) {
+
+            inventoryStatus.textContent =
+                'Availability unavailable';
+
+            inventoryStatus.className =
+                'inventory-status';
+
+            return;
+        }
+
+        const v =
+            currentVariant();
+
+        if (!v) {
+            return;
+        }
+
+        const stock =
+            getStock(v.catalogId);
+
+        if (stock <= 0) {
+
+            inventoryStatus.textContent =
+                'Sold out';
+
+            inventoryStatus.className =
+                'inventory-status sold-out';
+
+            addBtn.disabled = true;
+
+            return;
+        }
+
+        addBtn.disabled = false;
+
+        if (stock <= 5) {
+
+            inventoryStatus.textContent =
+                `Only ${stock} left`;
+
+            inventoryStatus.className =
+                'inventory-status low';
+
+        }
+        else {
+
+            inventoryStatus.textContent =
+                'In stock';
+
+            inventoryStatus.className =
+                'inventory-status';
+        }
+    }
+
+    // ── UPDATE SELECTION ─────────────────────────────────────────────────
+    function updateCurrentSelection() {
+
+        refreshPriceAndButton();
+        updateInventoryMessage();
+    }
+
+    // ── ADD TO CART ──────────────────────────────────────────────────────
+    addBtn.addEventListener(
+        'click',
+        async () => {
+
+            const v =
+                currentVariant();
+
+            if (!v) {
+
+                alert(
+                    'Please select a size.'
+                );
+
+                return;
+            }
+
+            // Re-check Square inventory
+            // immediately before adding.
+            addBtn.disabled = true;
+            addBtn.textContent =
+                'Checking...';
+
+            try {
+
+                await loadInventory();
+
+                const freshVariant =
+                    currentVariant();
+
+                const stock =
+                    getStock(
+                        freshVariant.catalogId
+                    );
+
+                if (stock <= 0) {
+
+                    alert(
+                        `Size ${currentSize} is sold out.`
+                    );
+
+                    addBtn.textContent =
+                        'Sold Out';
+
+                    updateInventoryMessage();
+
+                    return;
+                }
+
+                // Your existing cart system
+                window.PhantomCart.addItem({
+
+                    id:
+                        freshVariant.catalogId,
+
+                    name:
+                        PRODUCT_NAME,
+
+                    color:
+                        currentColor,
+
+                    size:
+                        currentSize,
+
+                    price:
+                        freshVariant.price,
+
+                    image:
+                        PRODUCT_IMG,
+
+                    noFilter:
+                        true
+                });
+
+                addBtn.textContent =
+                    'Added ✓';
+
+                setTimeout(() => {
+
+                    addBtn.textContent =
+                        'Add to Cart';
+
+                    updateInventoryMessage();
+
+                }, 1500);
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Add to cart error:',
+                    error
+                );
+
+                addBtn.textContent =
+                    'Try Again';
+
+                addBtn.disabled =
+                    false;
+            }
+        }
+    );
+
+    // ── BUY NOW ──────────────────────────────────────────────────────────
+    buyBtn.addEventListener(
+        'click',
+        async event => {
+
+            event.preventDefault();
+
+            const v =
+                currentVariant();
+
+            if (!v) {
+
+                alert(
+                    'Please select a size.'
+                );
+
+                return;
+            }
+
+            buyBtn.textContent =
+                'Checking...';
+
+            try {
+
+                // Re-check inventory
+                await loadInventory();
+
+                const freshVariant =
+                    currentVariant();
+
+                const stock =
+                    getStock(
+                        freshVariant.catalogId
+                    );
+
+                if (stock <= 0) {
+
+                    alert(
+                        `Size ${currentSize} is sold out.`
+                    );
+
+                    buyBtn.textContent =
+                        'Buy Now';
+
+                    return;
+                }
+
+                buyBtn.textContent =
+                    'Loading...';
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/create-checkout`,
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body: JSON.stringify({
+
+                                cart: [
+                                    {
+                                        id:
+                                            freshVariant.catalogId,
+
+                                        qty:
+                                            1,
+
+                                        color:
+                                            currentColor,
+
+                                        size:
+                                            currentSize
+                                    }
+                                ]
+
+                            })
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (
+                    !response.ok ||
+                    !data.checkoutUrl
+                ) {
+
+                    throw new Error(
+                        data.error ||
+                        'Unable to create checkout'
+                    );
+                }
+
+                window.location.href =
+                    data.checkoutUrl;
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Buy Now error:',
+                    error
+                );
+
+                alert(
+                    'Unable to start checkout. Please try again.'
+                );
+
+                buyBtn.textContent =
+                    'Buy Now';
+            }
+        }
+    );
+
+    // ── INITIALIZE ───────────────────────────────────────────────────────
+    async function initializeProduct() {
+
+        // Render immediately
+        renderSizeButtons(false);
+
+        refreshPriceAndButton();
+
+        // Get live Square inventory
+        await loadInventory();
+    }
+
+    initializeProduct();
+
+    // Refresh inventory every 30 seconds
+    setInterval(
+        loadInventory,
+        30000
+    );
 </script>
 
 </body>
