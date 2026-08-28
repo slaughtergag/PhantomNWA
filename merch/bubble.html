@@ -319,13 +319,15 @@
                 Note: All purchases are made to order. Please allow up to 2 weeks to receive your product.
             </p>
 
+            
             <div class="color-selector">
-                <div class="color-label">Color — <span id="colorName">White</span></div>
+                <div class="color-label">Type — <span id="colorName">Banner</span></div>
                 <div class="color-swatches">
-                    <div class="swatch swatch-white active" data-color="white" title="White"></div>
-                    <div class="swatch swatch-black" data-color="black" title="Black"></div>
+                    <div class="swatch active" data-color="banner" title="Banner">Banner</div>
+                    <div class="swatch" data-color="slap" title="Slap">Slap</div>
                 </div>
             </div>
+
 
             <div class="product-buttons" style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
                 <button class="btn-shop" id="addToCartBtn" style="cursor:pointer;width:220px;">Add to Cart</button>
@@ -350,13 +352,13 @@
     // Once the catalogId is filled in, Add to Cart works automatically —
     // nothing else needs to change.
     const variants = {
-        white: {
+        Banner: {
             price:     30.00,
-            catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID',   // ← Square variation ID for White
+            catalogId: '5HSVP3GEOHCCNZXRB6LEKFYR',
         },
-        black: {
-            price:     30.00,
-            catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID',   // ← Square variation ID for Black
+        Slap: {
+            price:     15.00,
+            catalogId: 'WQMYHOF5ZN6BHZA6NUJUWEAG',
         },
     };
     const PRODUCT_NAME = 'Bubble Sticker';
