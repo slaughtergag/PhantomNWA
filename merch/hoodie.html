@@ -211,6 +211,26 @@
     .swatch-white { background: #ffffff; }
     .swatch-black { background: #111111; outline: 1px solid rgba(255,255,255,0.12); }
 
+    /* ── SIZE SELECTOR ── */
+    .size-selector { margin-bottom: 1.75rem; }
+    .size-swatches { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .size-btn {
+        min-width: 44px; height: 36px; padding: 0 0.75rem;
+        border-radius: 2px;
+        border: 1.5px solid rgba(255,255,255,0.15);
+        background: transparent; color: var(--gray-light);
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.72rem; letter-spacing: 0.08em; font-weight: 600;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+    }
+    .size-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
+    .size-btn.active {
+        border-color: var(--white); color: var(--white);
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.15), var(--glow-sm);
+    }
+    .size-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
     /* ── BUY BUTTON ── */
     .product-buttons { text-align: center; }
     .btn-shop {
@@ -317,8 +337,13 @@
                 Note: All purchases are made to order. Please allow up to 2 weeks to receive your product.
             </p>
 
+            <div class="size-selector">
+                <div class="color-label">Size: <span id="sizeLabel">M</span></div>
+                <div class="size-swatches" id="sizeSwatches"><!-- built by JS from variants[currentColor] --></div>
+            </div>
+
             <div class="product-buttons" style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
-                <button class="btn-shop" id="addToCartBtn" style="cursor:pointer;width:220px;">Add to Cart</button>
+                <button class="btn-shop" id="addToCartBtn" style="cursor:pointer;width:220px;background:#fff;color:#000;border-color:#fff;">Add to Cart</button>
                 <a href="#" class="btn-shop" id="buyBtn" target="_blank" style="width:220px;background:rgba(255,255,255,0.04);">Buy Now</a>
             </div>
 
@@ -334,17 +359,19 @@
 <script src="../cart.js"></script>
 <script>
     // ── CONFIGURE PER PRODUCT ────────────────────────────────────────────
-    // ⚠️ REQUIRED: replace 'REPLACE_WITH_SQUARE_CATALOG_ID' with the real
-    // Square Catalog Object ID for this item variation (see Square Dashboard
-    // → Items & Orders → Items). Checkout WILL fail with a made-up ID like
-    // 'hoodie' — Square has no item called that in its catalog.
+    // ⚠️ REQUIRED: replace every 'REPLACE_WITH_SQUARE_CATALOG_ID' below with
+    // the real Square Catalog Object ID for THAT color+size combination
+    // (see Square Dashboard → Items & Orders → Items → this item's
+    // variations). Each size is normally its own catalog variation with
+    // its own ID, and can have its own price too.
     const variants = {
         white: {
-            price:     60.00,
-            buyLink:   '#',                              // ← Square "Buy Now" link for white, if you use one
-            catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID',  // ← required for cart checkout to work
+            S:  { price: 60.00, catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID_WHITE_S'  },
+            M:  { price: 60.00, catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID_WHITE_M'  },
+            L:  { price: 60.00, catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID_WHITE_L'  },
+            XL: { price: 65.00, catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID_WHITE_XL' },
         }
-        // Add a "black" entry here (with its own catalogId) once you have
+        // Add a "black" entry here (with its own S/M/L/XL) once you have
         // a black variant and want to bring back the color swatches.
     };
     const PRODUCT_NAME = 'Build your passion';
@@ -352,6 +379,7 @@
     // ────────────────────────────────────────────────────────────────────
 
     let currentColor = 'white';
+    let currentSize  = 'M';
 
     // ── CAROUSEL ────────────────────────────────────────────────────────
     const slidesEl  = document.getElementById('slides');
@@ -397,31 +425,78 @@
     // so this used to throw a TypeError every time selectVariant() ran.
     // Guarding it means this same script also works unmodified on future
     // multi-color product pages that DO include a #colorName element.
-    const colorName = document.getElementById('colorName');
-    const swatches  = document.querySelectorAll('.swatch');
-    const addBtn    = document.getElementById('addToCartBtn');
+    const colorName    = document.getElementById('colorName');
+    const swatches     = document.querySelectorAll('.swatch');
+    const addBtn       = document.getElementById('addToCartBtn');
+    const sizeSwatches = document.getElementById('sizeSwatches');
+    const sizeLabel    = document.getElementById('sizeLabel');
+
+    function currentVariant() {
+        return variants[currentColor] && variants[currentColor][currentSize];
+    }
+
+    function refreshPriceAndButton() {
+        const v = currentVariant();
+        if (!v) return;
+        priceEl.textContent = '$' + v.price.toFixed(2);
+        if (buyBtn) buyBtn.href = '#'; // wire up a per-variant Square link here if you use direct "Buy Now" links
+    }
+
+    function renderSizeButtons() {
+        const sizes = Object.keys(variants[currentColor] || {});
+        sizeSwatches.innerHTML = '';
+        sizes.forEach((size) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'size-btn' + (size === currentSize ? ' active' : '');
+            btn.textContent = size;
+            btn.addEventListener('click', () => selectSize(size));
+            sizeSwatches.appendChild(btn);
+        });
+    }
+
+    function selectSize(size) {
+        if (!variants[currentColor] || !variants[currentColor][size]) return;
+        currentSize = size;
+        if (sizeLabel) sizeLabel.textContent = size;
+        sizeSwatches.querySelectorAll('.size-btn').forEach((b) => {
+            b.classList.toggle('active', b.textContent === size);
+        });
+        refreshPriceAndButton();
+    }
 
     function selectVariant(color) {
-        const v = variants[color];
-        if (!v) return;
+        if (!variants[color]) return;
         currentColor = color;
+        // Default to the first available size for this color, unless the
+        // currently selected size also exists for it.
+        const sizesForColor = Object.keys(variants[color]);
+        if (!sizesForColor.includes(currentSize)) {
+            currentSize = sizesForColor[0];
+        }
         imageWrap.classList.toggle('variant-black', color === 'black');
-        priceEl.textContent = '$' + v.price.toFixed(2);
-        buyBtn.href = v.buyLink;
         if (colorName) {
             colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1);
         }
         swatches.forEach(s => s.classList.toggle('active', s.dataset.color === color));
+        renderSizeButtons();
+        if (sizeLabel) sizeLabel.textContent = currentSize;
+        refreshPriceAndButton();
     }
 
     swatches.forEach(s => s.addEventListener('click', () => selectVariant(s.dataset.color)));
 
     addBtn.addEventListener('click', () => {
-        const v = variants[currentColor];
+        const v = currentVariant();
+        if (!v) {
+            alert('Please select a size.');
+            return;
+        }
         window.PhantomCart.addItem({
-            id:      v.catalogId,   // FIXED: send the real Square catalog ID, not a made-up product id
+            id:      v.catalogId,   // the real Square catalog ID for this color+size combo
             name:    PRODUCT_NAME,
             color:   currentColor,
+            size:    currentSize,
             price:   v.price,
             image:   PRODUCT_IMG,
             noFilter: true,
