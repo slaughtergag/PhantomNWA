@@ -15,9 +15,9 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
     }
 
-    // ── Checkout payload — only sends id/qty/color to backend ────────────────
+    // ── Checkout payload — only sends id/qty/color/size to backend ───────────
     function buildCheckoutPayload() {
-        return getCart().map(i => ({ id: i.id, qty: i.qty, color: i.color }));
+        return getCart().map(i => ({ id: i.id, qty: i.qty, color: i.color, size: i.size }));
     }
 
     // ── Unified Square checkout ───────────────────────────────────────────────
@@ -63,7 +63,7 @@
     // ── Cart mutations ────────────────────────────────────────────────────────
     function addItem(item) {
         const cart = getCart();
-        const existing = cart.find(i => i.id === item.id && i.color === item.color);
+        const existing = cart.find(i => i.id === item.id && i.color === item.color && i.size === item.size);
         if (existing) {
             existing.qty = (existing.qty || 1) + 1;
         } else {
@@ -74,17 +74,17 @@
         showUpsellPopup(item);
     }
 
-    function removeItem(id, color) {
-        saveCart(getCart().filter(i => !(i.id === id && i.color === color)));
+    function removeItem(id, color, size) {
+        saveCart(getCart().filter(i => !(i.id === id && i.color === color && i.size === size)));
         renderDrawer();
         renderCartPage();
     }
 
-    function updateQty(id, color, qty) {
+    function updateQty(id, color, size, qty) {
         const cart = getCart();
-        const item = cart.find(i => i.id === id && i.color === color);
+        const item = cart.find(i => i.id === id && i.color === color && i.size === size);
         if (!item) return;
-        if (qty < 1) { removeItem(id, color); return; }
+        if (qty < 1) { removeItem(id, color, size); return; }
         item.qty = qty;
         saveCart(cart);
         renderDrawer();
@@ -239,16 +239,16 @@
                 </div>
                 <div style="flex:1;min-width:0;">
                     <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;color:#fff;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
-                    <div style="font-size:0.6rem;letter-spacing:0.2em;color:#777;text-transform:uppercase;margin-top:0.15rem;">${item.color}</div>
+                    <div style="font-size:0.6rem;letter-spacing:0.2em;color:#777;text-transform:uppercase;margin-top:0.15rem;">${[item.color, item.size].filter(Boolean).join(' / ')}</div>
                     <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;">
-                        <button onclick="window.PhantomCart.updateQty('${item.id}','${item.color}',${item.qty - 1})" style="width:24px;height:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:2px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;">−</button>
+                        <button onclick="window.PhantomCart.updateQty('${item.id}','${item.color}','${item.size || ''}',${item.qty - 1})" style="width:24px;height:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:2px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;">−</button>
                         <span style="font-size:0.78rem;color:#ccc;min-width:16px;text-align:center;">${item.qty}</span>
-                        <button onclick="window.PhantomCart.updateQty('${item.id}','${item.color}',${item.qty + 1})" style="width:24px;height:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:2px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;">+</button>
+                        <button onclick="window.PhantomCart.updateQty('${item.id}','${item.color}','${item.size || ''}',${item.qty + 1})" style="width:24px;height:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:2px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;">+</button>
                     </div>
                 </div>
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="font-size:0.9rem;font-weight:700;color:#fff;">$${(item.price * item.qty).toFixed(2)}</div>
-                    <button onclick="window.PhantomCart.removeItem('${item.id}','${item.color}')" style="margin-top:0.4rem;background:none;border:none;color:#555;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;font-family:'Oxanium',sans-serif;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#555'">Remove</button>
+                    <button onclick="window.PhantomCart.removeItem('${item.id}','${item.color}','${item.size || ''}')" style="margin-top:0.4rem;background:none;border:none;color:#555;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;font-family:'Oxanium',sans-serif;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#555'">Remove</button>
                 </div>
             </div>
         `).join('');
@@ -406,12 +406,12 @@
                         </div>
                         <div class="cart-info">
                             <div class="cart-name">${item.name}</div>
-                            <div class="cart-color">${item.color}</div>
+                            <div class="cart-color">${[item.color, item.size].filter(Boolean).join(' / ')}</div>
                             <div class="cart-qty-row">
-                                <button class="qty-btn" onclick="window.PhantomCart.updateQty('${item.id}','${item.color}',${item.qty - 1})">−</button>
+                                <button class="qty-btn" onclick="window.PhantomCart.updateQty('${item.id}','${item.color}','${item.size || ''}',${item.qty - 1})">−</button>
                                 <span class="qty-num">${item.qty}</span>
-                                <button class="qty-btn" onclick="window.PhantomCart.updateQty('${item.id}','${item.color}',${item.qty + 1})">+</button>
-                                <button class="remove-btn" onclick="window.PhantomCart.removeItem('${item.id}','${item.color}')">Remove</button>
+                                <button class="qty-btn" onclick="window.PhantomCart.updateQty('${item.id}','${item.color}','${item.size || ''}',${item.qty + 1})">+</button>
+                                <button class="remove-btn" onclick="window.PhantomCart.removeItem('${item.id}','${item.color}','${item.size || ''}')">Remove</button>
                             </div>
                         </div>
                         <div class="cart-price">$${(item.price * item.qty).toFixed(2)}</div>
