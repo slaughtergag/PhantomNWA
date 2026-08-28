@@ -16,6 +16,23 @@ async function handleCreateCheckout(request, env) {
   try {
     const body = await request.json();
 
+    if (!Array.isArray(body.cart) || body.cart.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Cart is empty." }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
+
+    const line_items = body.cart.map(item => ({
+      catalog_object_id: item.id,
+      quantity: String(item.qty)
+    }));
+
     const response = await fetch(
       "https://connect.squareup.com/v2/online-checkout/payment-links",
       {
@@ -29,7 +46,7 @@ async function handleCreateCheckout(request, env) {
           idempotency_key: crypto.randomUUID(),
           order: {
             location_id: env.SQUARE_LOCATION_ID,
-            line_items: body.line_items
+            line_items
           }
         })
       }
@@ -37,15 +54,39 @@ async function handleCreateCheckout(request, env) {
 
     const data = await response.json();
 
-    return new Response(JSON.stringify(data), {
-      status: response.status,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+    if (!response.ok) {
+      console.error("Square error:", data);
+
+      return new Response(
+        JSON.stringify({
+          error: "Square checkout failed.",
+          details: data
+        }),
+        {
+          status: response.status,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        checkoutUrl: data.payment_link?.url
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       }
-    });
+    );
 
   } catch (error) {
+    console.error("Checkout error:", error);
+
     return new Response(
       JSON.stringify({
         error: error.message
@@ -53,8 +94,7 @@ async function handleCreateCheckout(request, env) {
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
+          "Content-Type": "application/json"
         }
       }
     );
