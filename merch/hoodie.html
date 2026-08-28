@@ -230,8 +230,25 @@
         box-shadow: 0 0 0 1px rgba(255,255,255,0.15), var(--glow-sm);
     }
 
-    .size-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-    
+    .size-btn:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .size-btn:disabled::after {
+        content: "";
+        position: absolute;
+        width: 140%;
+        height: 1.5px;
+        background: rgba(255, 255, 255, 0.55);
+        top: 50%;
+        left: -20%;
+        transform: rotate(-45deg);
+        pointer-events: none;
+    }
+
     .inventory-status {
     margin-top: 0.65rem;
     min-height: 16px;

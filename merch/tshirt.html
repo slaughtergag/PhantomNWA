@@ -1,0 +1,1648 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" href="../imgs/favicon.png" type="image/png">
+
+<title>Shooting Star Tee - PHANTOM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --white: #ffffff;
+    --off-white: #c8c8c8;
+    --gray: #666;
+    --gray-light: #999;
+    --dark: #0a0a0a;
+    --card-bg: #111111;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.18);
+    --glow-sm: 0 0 12px rgba(255,255,255,0.12),
+               0 0 30px rgba(255,255,255,0.05);
+    --glow-md: 0 0 20px rgba(255,255,255,0.18),
+               0 0 60px rgba(255,255,255,0.07);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── NAV ── */
+
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(6,6,6,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo img {
+    height: 48px;
+    width: auto;
+    filter: drop-shadow(var(--glow-sm)) brightness(1.1);
+    transition: filter 0.3s ease;
+}
+
+.nav-logo img:hover {
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)) brightness(1.3);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+}
+
+.nav-links a {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: var(--gray-light);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--white);
+    text-shadow: 0 0 12px rgba(255,255,255,0.5);
+}
+
+.nav-social {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-social a {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--gray-light);
+    text-decoration: none;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+.nav-social a:hover {
+    color: var(--white);
+    text-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+/* ── CONTAINER ── */
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    flex: 1;
+    width: 100%;
+}
+
+.section-label {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.section-title {
+    font-family: 'Oxanium', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    color: var(--white);
+    text-shadow: var(--glow-md);
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 3.5rem;
+}
+
+/* ── PRODUCT LAYOUT ── */
+
+.product-content {
+    display: flex;
+    gap: 4rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* ── CAROUSEL ── */
+
+.carousel-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+}
+
+.product-image {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.4s;
+    position: relative;
+}
+
+.product-image:hover {
+    border-color: var(--border-bright);
+    box-shadow: var(--glow-sm);
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+
+.slide {
+    min-width: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    object-fit: cover;
+    object-position: center;
+    transition: filter 0.35s ease;
+}
+
+.slide.life-shot {
+    padding: 0;
+}
+
+.slide.life-shot img {
+    max-height: 340px;
+    object-fit: cover;
+    filter: brightness(0.85) grayscale(0.1) !important;
+}
+
+.slide.life-shot:hover img {
+    filter: brightness(1) grayscale(0) !important;
+}
+
+/* ── ARROWS ── */
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(4px);
+}
+
+.carousel-btn:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.carousel-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.carousel-btn.prev {
+    left: 0.6rem;
+}
+
+.carousel-btn.next {
+    right: 0.6rem;
+}
+
+.carousel-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+/* ── DOTS ── */
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 0.75rem;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.dot.active {
+    background: var(--white);
+    transform: scale(1.25);
+}
+
+/* ── DETAILS ── */
+
+.product-details {
+    max-width: 380px;
+}
+
+.product-price {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 1.25rem;
+    text-shadow: var(--glow-sm);
+}
+
+.product-description {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    line-height: 2;
+    margin-bottom: 1.75rem;
+    font-weight: 400;
+}
+
+/* ── SIZE SELECTOR ── */
+
+.size-selector {
+    margin-bottom: 1.75rem;
+}
+
+.color-label {
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.color-label span {
+    color: var(--white);
+    letter-spacing: 0.15em;
+}
+
+.size-swatches {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.size-btn {
+    min-width: 44px;
+    height: 36px;
+    padding: 0 0.75rem;
+    border-radius: 2px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: var(--gray-light);
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        color 0.2s,
+        opacity 0.2s;
+}
+
+.size-btn:hover:not(:disabled) {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--white);
+}
+
+.size-btn.active {
+    border-color: var(--white);
+    color: var(--white);
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.15),
+        var(--glow-sm);
+}
+
+.size-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.inventory-status {
+    margin-top: 0.65rem;
+    min-height: 16px;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: var(--gray-light);
+    text-transform: uppercase;
+}
+
+.inventory-status.low {
+    color: var(--white);
+}
+
+.inventory-status.sold-out {
+    color: var(--gray);
+}
+
+/* ── BUY BUTTON ── */
+
+.product-buttons {
+    text-align: center;
+}
+
+.btn-shop {
+    display: inline-block;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 0.85rem 2.5rem;
+    width: 220px;
+    text-align: center;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    color: var(--white);
+    border-radius: 2px;
+    transition: all 0.25s;
+    box-sizing: border-box;
+}
+
+.btn-shop:hover {
+    background: var(--white);
+    color: #000;
+    border-color: var(--white);
+    box-shadow: var(--glow-md);
+}
+
+.btn-shop:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: transparent !important;
+    color: var(--gray-light) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    box-shadow: none !important;
+}
+
+/* ── FOOTER ── */
+
+footer {
+    background: #040404;
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    text-align: center;
+}
+
+.footer-copy {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* ── RESPONSIVE ── */
+
+@media (max-width: 768px) {
+
+    nav {
+        padding: 1rem 1.5rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .container {
+        padding: 3rem 1.5rem;
+    }
+
+    .product-content {
+        gap: 2rem;
+    }
+
+    .btn-shop {
+        width: 100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ── NAV ── -->
+
+<nav>
+
+    <a href="../index.html" class="nav-logo">
+        <img src="../imgs/frontembossed.png" alt="PHANTOM">
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="../index.html#builds">Garage</a></li>
+        <li><a href="../index.html#builds">Members</a></li>
+        <li><a href="../index.html#reels">Media</a></li>
+        <li><a href="../index.html#drop">Shop</a></li>
+        <li><a href="../index.html#collective">Contact</a></li>
+    </ul>
+
+    <div class="nav-social">
+        <a href="https://instagram.com/phantom.nwa"
+           target="_blank"
+           rel="noopener">
+            IG
+        </a>
+
+        <a href="#" target="_blank" rel="noopener">TK</a>
+        <a href="#" target="_blank" rel="noopener">YT</a>
+    </div>
+
+</nav>
+
+<!-- ── PRODUCT ── -->
+
+<section class="container">
+
+    <p class="section-label">
+        Phantom Merch / Apparel
+    </p>
+
+    <h2 class="section-title">
+        Shooting Star Tee
+    </h2>
+
+    <div class="product-content">
+
+        <!-- CAROUSEL -->
+
+        <div class="carousel-wrap">
+
+            <div class="product-image" id="productImageWrap">
+
+                <button class="carousel-btn prev"
+                        id="prevBtn"
+                        aria-label="Previous">
+
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+
+                </button>
+
+                <button class="carousel-btn next"
+                        id="nextBtn"
+                        aria-label="Next">
+
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+
+                </button>
+
+                <div class="slides" id="slides">
+
+                    <div class="slide">
+                        <img src="../imgs/Shooting Star Front.png"
+                             alt="Shooting Star Tee">
+                    </div>
+
+                    <div class="slide life-shot">
+                        <img src="../imgs/Shooting Star Back.png"
+                             alt="Shooting Star Tee back">
+                    </div>
+
+                    <div class="slide life-shot">
+                        <img src="../imgs/Shooting Star Lifestyle.jpg"
+                             alt="Shooting Star Tee lifestyle">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="carousel-dots" id="dots"></div>
+
+        </div>
+
+        <!-- DETAILS -->
+
+        <div class="product-details">
+
+            <p class="product-price" id="productPrice">
+                $25.00
+            </p>
+
+            <p class="product-description">
+                Soft, comfortable cotton T-shirt
+                <br>
+                <br>
+                Note: All purchases are made to order.
+                Please allow up to 2 weeks to receive your product.
+            </p>
+
+            <!-- SIZE -->
+
+            <div class="size-selector">
+
+                <div class="color-label">
+                    Size:
+                    <span id="sizeLabel">M</span>
+                </div>
+
+                <div class="size-swatches"
+                     id="sizeSwatches">
+                </div>
+
+                <div class="inventory-status"
+                     id="inventoryStatus">
+                    Checking availability...
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="product-buttons"
+                 style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
+
+                <button class="btn-shop"
+                        id="addToCartBtn"
+                        style="cursor:pointer;width:220px;background:#fff;color:#000;border-color:#fff;">
+
+                    Add to Cart
+
+                </button>
+
+                <a href="#"
+                   class="btn-shop"
+                   id="buyBtn"
+                   target="_blank"
+                   style="width:220px;background:rgba(255,255,255,0.04);">
+
+                    Buy Now
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ── FOOTER ── -->
+
+<footer>
+
+    <p class="footer-copy">
+        © 2026 Phantom Collective
+    </p>
+
+</footer>
+
+<script src="../cart.js"></script>
+
+<script>
+
+/* ============================================================
+   PRODUCT CONFIGURATION
+   ============================================================ */
+
+const variants = {
+
+    white: {
+
+        S: {
+            price: 25.00,
+            catalogId: 'OPMVSOEYRLBUX4J5PZPXHIBS'
+        },
+
+        M: {
+            price: 25.00,
+            catalogId: '3FMZ2KDYMOORGMGB4TXDDEOY'
+        },
+
+        L: {
+            price: 25.00,
+            catalogId: 'BVZS2PP7QJFTDJGC6FBTIS66'
+        },
+
+        XL: {
+            price: 25.00,
+            catalogId: 'WF5YP7YZTUL6TYYPY7MKEW6Y'
+        }
+
+    }
+
+};
+
+const PRODUCT_NAME = 'Shooting Star Tee';
+
+const PRODUCT_IMG = '../imgs/Shooting Star Front.png';
+
+/*
+ * IMPORTANT:
+ *
+ * This must point to your Cloudflare Worker.
+ *
+ * Since you deployed the Worker at:
+ *
+ * checkout.phantomnwa.shop
+ *
+ * we use:
+ */
+
+const API_BASE = 'https://checkout.phantomnwa.shop';
+
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+let currentColor = 'white';
+let currentSize = 'M';
+
+let inventory = {};
+
+let inventoryLoaded = false;
+
+
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
+
+const slidesEl =
+    document.getElementById('slides');
+
+const prevBtn =
+    document.getElementById('prevBtn');
+
+const nextBtn =
+    document.getElementById('nextBtn');
+
+const dotsWrap =
+    document.getElementById('dots');
+
+const priceEl =
+    document.getElementById('productPrice');
+
+const buyBtn =
+    document.getElementById('buyBtn');
+
+const addBtn =
+    document.getElementById('addToCartBtn');
+
+const sizeSwatches =
+    document.getElementById('sizeSwatches');
+
+const sizeLabel =
+    document.getElementById('sizeLabel');
+
+const inventoryStatus =
+    document.getElementById('inventoryStatus');
+
+
+/* ============================================================
+   CAROUSEL
+   ============================================================ */
+
+const slideEls =
+    slidesEl.querySelectorAll('.slide');
+
+const total =
+    slideEls.length;
+
+let current = 0;
+
+slideEls.forEach((_, i) => {
+
+    const d =
+        document.createElement('div');
+
+    d.className =
+        'dot' + (i === 0 ? ' active' : '');
+
+    d.addEventListener('click', () => {
+        goTo(i);
+    });
+
+    dotsWrap.appendChild(d);
+
+});
+
+function goTo(n) {
+
+    current =
+        Math.max(
+            0,
+            Math.min(n, total - 1)
+        );
+
+    slidesEl.style.transform =
+        `translateX(-${current * 100}%)`;
+
+    dotsWrap
+        .querySelectorAll('.dot')
+        .forEach((d, i) => {
+
+            d.classList.toggle(
+                'active',
+                i === current
+            );
+
+        });
+
+    prevBtn.disabled =
+        current === 0;
+
+    nextBtn.disabled =
+        current === total - 1;
+}
+
+prevBtn.addEventListener(
+    'click',
+    () => goTo(current - 1)
+);
+
+nextBtn.addEventListener(
+    'click',
+    () => goTo(current + 1)
+);
+
+
+/* ============================================================
+   MOBILE SWIPE
+   ============================================================ */
+
+let touchStartX = 0;
+
+slidesEl.addEventListener(
+    'touchstart',
+    e => {
+        touchStartX =
+            e.touches[0].clientX;
+    },
+    { passive: true }
+);
+
+slidesEl.addEventListener(
+    'touchend',
+    e => {
+
+        const diff =
+            touchStartX -
+            e.changedTouches[0].clientX;
+
+        if (Math.abs(diff) > 40) {
+
+            goTo(
+                diff > 0
+                    ? current + 1
+                    : current - 1
+            );
+
+        }
+
+    }
+);
+
+goTo(0);
+
+
+/* ============================================================
+   VARIANT HELPERS
+   ============================================================ */
+
+function currentVariant() {
+
+    return (
+        variants[currentColor] &&
+        variants[currentColor][currentSize]
+    );
+
+}
+
+
+function getStock(catalogId) {
+
+    /*
+     * If Square doesn't return a count,
+     * treat it as unavailable.
+     */
+
+    if (!inventory[catalogId]) {
+        return 0;
+    }
+
+    const item =
+        inventory[catalogId];
+
+    if (
+        item.state &&
+        item.state !== 'IN_STOCK'
+    ) {
+        return 0;
+    }
+
+    return Math.max(
+        0,
+        Number(item.quantity || 0)
+    );
+
+}
+
+
+/* ============================================================
+   LOAD INVENTORY FROM CLOUDFLARE
+   ============================================================ */
+
+async function loadInventory() {
+
+    inventoryStatus.textContent =
+        'Checking availability...';
+
+    inventoryStatus.className =
+        'inventory-status';
+
+    try {
+
+        /*
+         * Collect every Square variation ID
+         * for this product.
+         */
+
+        const ids = [];
+
+        Object.values(
+            variants[currentColor]
+        ).forEach(variant => {
+
+            if (variant.catalogId) {
+                ids.push(
+                    variant.catalogId
+                );
+            }
+
+        });
+
+
+        const response =
+            await fetch(
+                `${API_BASE}/inventory?ids=${encodeURIComponent(ids.join(','))}`,
+                {
+                    method: 'GET',
+                    cache: 'no-store'
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Inventory request failed: ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        inventory =
+            data.inventory || {};
+
+        inventoryLoaded = true;
+
+
+        renderSizeButtons();
+
+        updateCurrentSelection();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            'Inventory error:',
+            error
+        );
+
+        inventoryLoaded = false;
+
+        /*
+         * Don't pretend we know inventory.
+         * Keep the buttons usable if Square's
+         * inventory endpoint is temporarily unavailable.
+         */
+
+        inventoryStatus.textContent =
+            'Availability unavailable';
+
+        renderSizeButtons(false);
+
+    }
+
+}
+
+
+/* ============================================================
+   RENDER SIZE BUTTONS
+   ============================================================ */
+
+function renderSizeButtons(
+    useInventory = true
+) {
+
+    const sizes =
+        Object.keys(
+            variants[currentColor] || {}
+        );
+
+    sizeSwatches.innerHTML = '';
+
+
+    sizes.forEach(size => {
+
+        const variant =
+            variants[currentColor][size];
+
+        const stock =
+            useInventory
+                ? getStock(variant.catalogId)
+                : null;
+
+
+        const btn =
+            document.createElement('button');
+
+        btn.type = 'button';
+
+        btn.className =
+            'size-btn' +
+            (
+                size === currentSize
+                    ? ' active'
+                    : ''
+            );
+
+
+        btn.textContent = size;
+
+
+        /*
+         * Disable sizes with zero inventory.
+         */
+
+        if (
+            useInventory &&
+            stock <= 0
+        ) {
+
+            btn.disabled = true;
+
+            btn.title =
+                `${size} — Sold Out`;
+
+        }
+        else {
+
+            btn.addEventListener(
+                'click',
+                () => selectSize(size)
+            );
+
+        }
+
+
+        sizeSwatches.appendChild(btn);
+
+    });
+
+
+    /*
+     * If the currently selected size
+     * is sold out, automatically move
+     * to the first available size.
+     */
+
+    if (useInventory) {
+
+        const current =
+            variants[currentColor][currentSize];
+
+        const currentStock =
+            current
+                ? getStock(current.catalogId)
+                : 0;
+
+
+        if (currentStock <= 0) {
+
+            const firstAvailable =
+                sizes.find(size => {
+
+                    return (
+                        getStock(
+                            variants[currentColor][size]
+                                .catalogId
+                        ) > 0
+                    );
+
+                });
+
+
+            if (firstAvailable) {
+
+                currentSize =
+                    firstAvailable;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+     * Re-render active state after
+     * potentially changing the size.
+     */
+
+    sizeSwatches
+        .querySelectorAll('.size-btn')
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                'active',
+                btn.textContent === currentSize
+            );
+
+        });
+
+
+    if (sizeLabel) {
+
+        sizeLabel.textContent =
+            currentSize;
+
+    }
+
+}
+
+
+/* ============================================================
+   SELECT SIZE
+   ============================================================ */
+
+function selectSize(size) {
+
+    if (
+        !variants[currentColor] ||
+        !variants[currentColor][size]
+    ) {
+        return;
+    }
+
+
+    const variant =
+        variants[currentColor][size];
+
+
+    /*
+     * Don't allow selecting something
+     * Square says is sold out.
+     */
+
+    if (inventoryLoaded) {
+
+        const stock =
+            getStock(variant.catalogId);
+
+        if (stock <= 0) {
+
+            return;
+
+        }
+
+    }
+
+
+    currentSize =
+        size;
+
+
+    if (sizeLabel) {
+
+        sizeLabel.textContent =
+            size;
+
+    }
+
+
+    sizeSwatches
+        .querySelectorAll('.size-btn')
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                'active',
+                btn.textContent === size
+            );
+
+        });
+
+
+    refreshPrice();
+
+    updateInventoryMessage();
+
+}
+
+
+/* ============================================================
+   PRICE
+   ============================================================ */
+
+function refreshPrice() {
+
+    const v =
+        currentVariant();
+
+    if (!v) {
+        return;
+    }
+
+    priceEl.textContent =
+        '$' + v.price.toFixed(2);
+
+}
+
+
+/* ============================================================
+   INVENTORY MESSAGE
+   ============================================================ */
+
+function updateInventoryMessage() {
+
+    if (!inventoryLoaded) {
+
+        inventoryStatus.textContent =
+            'Availability unavailable';
+
+        inventoryStatus.className =
+            'inventory-status';
+
+        return;
+
+    }
+
+
+    const v =
+        currentVariant();
+
+    if (!v) {
+        return;
+    }
+
+
+    const stock =
+        getStock(v.catalogId);
+
+
+    if (stock <= 0) {
+
+        inventoryStatus.textContent =
+            'Sold out';
+
+        inventoryStatus.className =
+            'inventory-status sold-out';
+
+        addBtn.disabled = true;
+
+        return;
+
+    }
+
+
+    addBtn.disabled = false;
+
+
+    if (stock <= 5) {
+
+        inventoryStatus.textContent =
+            `Only ${stock} left`;
+
+        inventoryStatus.className =
+            'inventory-status low';
+
+    }
+    else {
+
+        inventoryStatus.textContent =
+            'In stock';
+
+        inventoryStatus.className =
+            'inventory-status';
+
+    }
+
+}
+
+
+/* ============================================================
+   UPDATE CURRENT SELECTION
+   ============================================================ */
+
+function updateCurrentSelection() {
+
+    refreshPrice();
+
+    updateInventoryMessage();
+
+}
+
+
+/* ============================================================
+   ADD TO CART
+   ============================================================ */
+
+addBtn.addEventListener(
+    'click',
+    async () => {
+
+        const v =
+            currentVariant();
+
+
+        if (!v) {
+
+            alert(
+                'Please select a size.'
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Refresh inventory immediately before
+         * adding to cart.
+         *
+         * This reduces the chance of somebody
+         * buying the last item while another
+         * customer has already purchased it.
+         */
+
+        addBtn.disabled = true;
+
+        addBtn.textContent =
+            'Checking...';
+
+
+        try {
+
+            await loadInventory();
+
+
+            const freshVariant =
+                currentVariant();
+
+
+            const stock =
+                getStock(
+                    freshVariant.catalogId
+                );
+
+
+            if (stock <= 0) {
+
+                alert(
+                    `Size ${currentSize} is sold out.`
+                );
+
+                addBtn.textContent =
+                    'Sold Out';
+
+                updateInventoryMessage();
+
+                return;
+
+            }
+
+
+            /*
+             * Add the actual Square variation ID
+             * to your cart.
+             */
+
+            window.PhantomCart.addItem({
+
+                id:
+                    freshVariant.catalogId,
+
+                name:
+                    PRODUCT_NAME,
+
+                color:
+                    currentColor,
+
+                size:
+                    currentSize,
+
+                price:
+                    freshVariant.price,
+
+                image:
+                    PRODUCT_IMG,
+
+                noFilter:
+                    true
+
+            });
+
+
+            addBtn.textContent =
+                'Added ✓';
+
+
+            setTimeout(() => {
+
+                addBtn.textContent =
+                    'Add to Cart';
+
+                addBtn.disabled =
+                    false;
+
+            }, 1500);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                'Add to cart error:',
+                error
+            );
+
+            addBtn.textContent =
+                'Try Again';
+
+            addBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   BUY NOW
+   ============================================================ */
+
+buyBtn.addEventListener(
+    'click',
+    async event => {
+
+        event.preventDefault();
+
+
+        const v =
+            currentVariant();
+
+
+        if (!v) {
+
+            alert(
+                'Please select a size.'
+            );
+
+            return;
+
+        }
+
+
+        await loadInventory();
+
+
+        const stock =
+            getStock(
+                v.catalogId
+            );
+
+
+        if (stock <= 0) {
+
+            alert(
+                `Size ${currentSize} is sold out.`
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Buy Now currently uses the same
+         * checkout system as your cart.
+         *
+         * Build a one-item checkout request.
+         */
+
+        try {
+
+            buyBtn.textContent =
+                'Loading...';
+
+
+            const response =
+                await fetch(
+                    `${API_BASE}/create-checkout`,
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
+
+                        body: JSON.stringify({
+                            cart: [
+                                {
+                                    id:
+                                        v.catalogId,
+
+                                    qty: 1,
+
+                                    color:
+                                        currentColor,
+
+                                    size:
+                                        currentSize
+                                }
+                            ]
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                !data.checkoutUrl
+            ) {
+
+                throw new Error(
+                    data.error ||
+                    'Unable to create checkout'
+                );
+
+            }
+
+
+            window.location.href =
+                data.checkoutUrl;
+
+        }
+
+        catch (error) {
+
+            console.error(
+                'Buy Now error:',
+                error
+            );
+
+            alert(
+                'Unable to start checkout. Please try again.'
+            );
+
+            buyBtn.textContent =
+                'Buy Now';
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   INITIALIZE
+   ============================================================ */
+
+async function initializeProduct() {
+
+    /*
+     * Render sizes immediately so the page
+     * doesn't look empty while Square loads.
+     */
+
+    renderSizeButtons(false);
+
+    refreshPrice();
+
+
+    /*
+     * Get live Square inventory.
+     */
+
+    await loadInventory();
+
+}
+
+
+/*
+ * Initial load
+ */
+
+initializeProduct();
+
+
+/*
+ * Refresh inventory every 30 seconds.
+ */
+
+setInterval(
+    loadInventory,
+    30000
+);
+
+</script>
+
+</body>
+</html>
+
