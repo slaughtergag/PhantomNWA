@@ -2,6 +2,22 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // CORS
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "https://phantomnwa.shop",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Max-Age": "86400"
+    };
+
+    // Handle browser CORS preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders
+      });
+    }
+
     if (url.pathname === "/create-checkout" && request.method === "POST") {
       try {
         const body = await request.json();
@@ -12,7 +28,10 @@ export default {
             JSON.stringify({ error: "Cart is empty or invalid" }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" }
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
             }
           );
         }
@@ -46,7 +65,10 @@ export default {
         if (!squareResponse.ok) {
           return new Response(JSON.stringify(data), {
             status: squareResponse.status,
-            headers: { "Content-Type": "application/json" }
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
           });
         }
 
@@ -56,7 +78,10 @@ export default {
           }),
           {
             status: 200,
-            headers: { "Content-Type": "application/json" }
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
           }
         );
 
@@ -65,12 +90,18 @@ export default {
           JSON.stringify({ error: error.message }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" }
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
           }
         );
       }
     }
 
-    return new Response("Not Found", { status: 404 });
+    return new Response("Not Found", {
+      status: 404,
+      headers: corsHeaders
+    });
   }
 };
