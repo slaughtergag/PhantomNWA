@@ -72,7 +72,7 @@ export async function onRequestPost(context) {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${env.SQUARE_ACCESS_TOKEN}`,
-        "Square-Version": "2024-08-21",
+        "Square-Version": "2026-08-19",
       },
       body: JSON.stringify({
         idempotency_key: crypto.randomUUID(),
