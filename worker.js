@@ -1,7 +1,23 @@
-// Square checkout endpoint - production
+// TEMPORARY Square credential diagnostic
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Temporary diagnostic endpoint
+    if (url.pathname === "/debug-square") {
+      return new Response(JSON.stringify({
+        hasToken: !!env.SQUARE_ACCESS_TOKEN,
+        tokenLength: env.SQUARE_ACCESS_TOKEN?.length || 0,
+        tokenPrefix: env.SQUARE_ACCESS_TOKEN?.substring(0, 6) || null,
+        hasLocation: !!env.SQUARE_LOCATION_ID,
+        locationLength: env.SQUARE_LOCATION_ID?.length || 0
+      }), {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+    }
 
     // Square checkout endpoint
     if (url.pathname === "/create-checkout" && request.method === "POST") {
