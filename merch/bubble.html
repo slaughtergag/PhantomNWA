@@ -344,17 +344,21 @@
 <script src="../cart.js"></script>
 <script>
     // ── CONFIGURE PER STICKER ────────────────────────────────────────────
+    // ⚠️ REQUIRED: replace every 'REPLACE_WITH_SQUARE_CATALOG_ID' below with
+    // the real Square Catalog Object ID for that color variation
+    // (Square Dashboard → Items & Orders → Items → this item's variations).
+    // Once the catalogId is filled in, Add to Cart works automatically —
+    // nothing else needs to change.
     const variants = {
         white: {
-            price:   30.00,      // ← number
-            buyLink: '#',       // ← Square link for white
+            price:     30.00,
+            catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID',   // ← Square variation ID for White
         },
         black: {
-            price:   30.00,
-            buyLink: '#',       // ← Square link for black
+            price:     30.00,
+            catalogId: 'REPLACE_WITH_SQUARE_CATALOG_ID',   // ← Square variation ID for Black
         },
     };
-    const PRODUCT_ID   = 'bubble';
     const PRODUCT_NAME = 'Bubble Sticker';
     const PRODUCT_IMG  = '../imgs/Merch/big banner.png';
     // ────────────────────────────────────────────────────────────────────
@@ -411,7 +415,7 @@
         currentColor = color;
         imageWrap.classList.toggle('variant-black', color === 'black');
         priceEl.textContent = '$' + v.price.toFixed(2);
-        buyBtn.href = v.buyLink;
+        buyBtn.href = '#'; // wire up a per-variant Square link here if you use direct "Buy Now" links
         colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1);
         swatches.forEach(s => s.classList.toggle('active', s.dataset.color === color));
     }
@@ -420,13 +424,13 @@
 
     addBtn.addEventListener('click', () => {
         const v = variants[currentColor];
+        if (!v || !v.catalogId) return;
         window.PhantomCart.addItem({
-            id:      PRODUCT_ID,
+            id:      v.catalogId,   // the real Square catalog ID for this color
             name:    PRODUCT_NAME,
             color:   currentColor,
             price:   v.price,
             image:   PRODUCT_IMG,
-            buyLink: v.buyLink,
         });
         addBtn.textContent = 'Added ✓';
         setTimeout(() => addBtn.textContent = 'Add to Cart', 1500);
