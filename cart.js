@@ -34,7 +34,7 @@
         }
 
         try {
-            const res = await fetch('/create-checkout', {
+            const res = await fetch('https://checkout.phantomnwa.shop/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ cart: buildCheckoutPayload() }),
