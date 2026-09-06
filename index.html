@@ -708,6 +708,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .footer-logo {
@@ -748,6 +750,40 @@
         .footer-nav a:hover {
             color: var(--white);
             text-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .footer-legal a {
+            font-family: 'Oxanium', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            color: var(--gray);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 400;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .footer-bottom {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--border);
         }
 
         .footer-social {
@@ -801,6 +837,8 @@
             .drop-images { grid-template-columns: 1fr 1fr; }
             footer { flex-direction: column; gap: 1.5rem; text-align: center; }
             .footer-nav { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .footer-bottom { flex-direction: column; gap: 1rem; }
+            .footer-legal { flex-wrap: wrap; justify-content: center; }
         }
 
         .ph {
@@ -982,7 +1020,14 @@
         <a href="#" target="_blank" rel="noopener">TK</a>
         <a href="#" target="_blank" rel="noopener">YT</a>
     </div>
-    <p class="footer-copy">© 2026 Phantom Collective</p>
+    <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Phantom Collective</p>
+        <ul class="footer-legal">
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html">Terms of Service</a></li>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+        </ul>
+    </div>
 </footer>
 
 <script>
