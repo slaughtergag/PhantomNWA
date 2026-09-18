@@ -1,1105 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHANTOM</title>
-    <link rel="icon" type="image/png" href="imgs/favicon.png">
-    <link rel="apple-touch-icon" href="imgs/favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --white: #ffffff;
-            --off-white: #c8c8c8;
-            --gray: #666;
-            --gray-light: #999;
-            --dark: #0a0a0a;
-            --darker: #060606;
-            --card-bg: #111111;
-            --border: rgba(255,255,255,0.07);
-            --border-bright: rgba(255,255,255,0.18);
-            --glow-sm: 0 0 12px rgba(255,255,255,0.12), 0 0 30px rgba(255,255,255,0.05);
-            --glow-md: 0 0 20px rgba(255,255,255,0.18), 0 0 60px rgba(255,255,255,0.07);
-            --glow-lg: 0 0 30px rgba(255,255,255,0.25), 0 0 80px rgba(255,255,255,0.1);
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--dark);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.2rem 3rem;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        .nav-logo {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-logo img {
-            height: 48px;
-            width: auto;
-            filter: drop-shadow(var(--glow-sm)) brightness(1.1);
-            transition: filter 0.3s ease;
-        }
-
-        .nav-logo img:hover {
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)) brightness(1.3);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.78rem;
-            letter-spacing: 0.18em;
-            color: var(--gray-light);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-weight: 500;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--white);
-            text-shadow: 0 0 12px rgba(255,255,255,0.5);
-        }
-
-        .nav-social {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .nav-social a {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            color: var(--gray-light);
-            text-decoration: none;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .nav-social a:hover {
-            color: var(--white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.6);
-        }
-
-        /* ── HERO ── */
-        #hero {
-            position: relative;
-            height: 100vh;
-            min-height: 700px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #050505;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url('imgs/background.png');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.3;
-            filter: brightness(0.4) contrast(1.2) grayscale(0.3);
-        }
-
-        .hero-bg::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom,
-                rgba(0,0,0,0.4) 0%,
-                rgba(0,0,0,0.1) 40%,
-                rgba(0,0,0,0.85) 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            text-align: center;
-            z-index: 2;
-        }
-
-        .hero-logo-img {
-            width: clamp(280px, 50vw, 650px);
-            height: auto;
-            filter: drop-shadow(0 0 40px rgba(255,255,255,0.2)) drop-shadow(0 0 100px rgba(255,255,255,0.06));
-            animation: fadeUp 1s ease both;
-        }
-
-        .hero-tagline {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.4em;
-            color: var(--gray-light);
-            margin-top: 1rem;
-            text-transform: uppercase;
-            font-weight: 400;
-            animation: fadeUp 1s 0.2s ease both;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2.5rem;
-            animation: fadeUp 1s 0.4s ease both;
-        }
-
-        .btn-primary, .btn-outline {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 400;
-            padding: 0.8rem 2rem;
-            text-decoration: none;
-            border-radius: 2px;
-            transition: all 0.25s;
-        }
-
-        .btn-primary {
-            background: var(--white);
-            color: #000;
-            border: 1.5px solid var(--white);
-            box-shadow: var(--glow-sm);
-        }
-
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--white);
-            box-shadow: var(--glow-md);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--white);
-            border: 1.5px solid rgba(255,255,255,0.35);
-        }
-
-        .btn-outline:hover {
-            border-color: rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.04);
-            box-shadow: var(--glow-sm);
-        }
-
-        /* FIX: Use left:0/right:0 instead of left:50%+translateX for iOS Safari centering */
-        .hero-scroll {
-            position: absolute;
-            bottom: 2rem;
-            left: 0;
-            right: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 2;
-            animation: fadeUp 1s 0.8s ease both;
-        }
-
-        .hero-scroll span {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.3em;
-            color: var(--gray);
-            text-transform: uppercase;
-        }
-
-        .scroll-arrow {
-            width: 14px;
-            height: 14px;
-            border-right: 1px solid var(--gray);
-            border-bottom: 1px solid var(--gray);
-            transform: rotate(45deg);
-            animation: bounce 1.5s infinite;
-        }
-
-        /* ── SECTION SHELL ── */
-        section { padding: 5rem 3rem; }
-
-        .section-label {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.62rem;
-            letter-spacing: 0.35em;
-            color: var(--gray-light);
-            text-transform: uppercase;
-            margin-bottom: 0.4rem;
-            font-weight: 400;
-        }
-
-        .section-title {
-            font-family: 'Oxanium', sans-serif;
-            font-size: clamp(1.6rem, 2.8vw, 2.4rem);
-            letter-spacing: 0.08em;
-            line-height: 1.05;
-            color: var(--white);
-            font-weight: 800;
-            text-shadow: var(--glow-sm);
-        }
-
-        .section-link {
-            display: inline-block;
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.22em;
-            color: var(--gray-light);
-            text-decoration: none;
-            text-transform: uppercase;
-            margin-top: 0.75rem;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            font-weight: 400;
-            transition: color 0.2s, border-color 0.2s, text-shadow 0.2s;
-        }
-
-        .section-link:hover {
-            color: var(--white);
-            border-color: rgba(255,255,255,0.5);
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-
-        /* ── BUILDS ── */
-        #builds {
-            background: var(--dark);
-            border-top: 1px solid var(--border);
-        }
-
-        .builds-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 160px 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        .builds-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-        }
-
-        .build-card {
-            position: relative;
-            aspect-ratio: 3/4;
-            overflow: hidden;
-            border-radius: 3px;
-            background: #1a1a1a;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .build-card:hover {
-            border-color: var(--border-bright);
-            box-shadow: var(--glow-sm);
-        }
-
-        .build-card-inner {
-            position: absolute;
-            inset: 0;
-            will-change: transform, opacity;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .build-card-inner.slide-out-left {
-            animation: slideOutLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .build-card-inner.slide-in-right {
-            animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes slideOutLeft {
-            0%   { transform: translateX(0);      opacity: 1; }
-            100% { transform: translateX(-110%);  opacity: 0; }
-        }
-
-        @keyframes slideInRight {
-            0%   { transform: translateX(110%);   opacity: 0; }
-            100% { transform: translateX(0);      opacity: 1; }
-        }
-
-        .build-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease, filter 0.5s ease;
-            filter: brightness(0.65) grayscale(0.15);
-        }
-
-        .build-card:hover img {
-            transform: scale(1.06);
-            filter: brightness(0.85) grayscale(0);
-        }
-
-        .build-card-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-        }
-
-        .build-member {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            color: var(--gray-light);
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        .build-car {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.95rem;
-            letter-spacing: 0.06em;
-            color: var(--white);
-            line-height: 1.2;
-            font-weight: 700;
-            text-shadow: 0 0 15px rgba(255,255,255,0.3);
-        }
-
-        .build-spec {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.58rem;
-            letter-spacing: 0.18em;
-            color: var(--gray-light);
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        /* ── COMING SOON PLACEHOLDER ── */
-        .build-card.coming-soon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #111 0%, #161616 100%);
-            cursor: default;
-        }
-
-        .build-card.coming-soon:hover {
-            border-color: var(--border);
-            box-shadow: none;
-        }
-
-        .coming-soon-inner {
-            text-align: center;
-            padding: 1rem;
-        }
-
-        .coming-soon-icon {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 1.6rem;
-            color: var(--gray);
-            margin-bottom: 0.6rem;
-            letter-spacing: 0.1em;
-        }
-
-        .coming-soon-text {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.62rem;
-            letter-spacing: 0.3em;
-            color: var(--gray);
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        /* ── REELS ── */
-        #reels {
-            background: #080808;
-            border-top: 1px solid var(--border);
-        }
-
-        .reels-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 160px 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        .reels-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.75rem;
-        }
-
-        .reel-card {
-            position: relative;
-            aspect-ratio: 9/16;
-            overflow: hidden;
-            border-radius: 3px;
-            background: #1a1a1a;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .reel-card:hover {
-            border-color: var(--border-bright);
-            box-shadow: var(--glow-sm);
-        }
-
-        .reel-card img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.55) grayscale(0.2);
-            transition: opacity 0.3s ease;
-            z-index: 1;
-        }
-
-        .reel-card video {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        .reel-card:hover img { opacity: 0; }
-
-        .reel-play {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            transition: opacity 0.3s ease;
-        }
-
-        .reel-play svg {
-            width: 30px;
-            height: 30px;
-            fill: rgba(255,255,255,0.6);
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
-            transition: fill 0.2s, transform 0.2s;
-        }
-
-        .reel-card:hover .reel-play { opacity: 0; }
-
-        /* ── DROP ── */
-        #drop {
-            background: var(--dark);
-            border-top: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            padding: 6rem 3rem;
-        }
-
-        .drop-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .drop-images {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .drop-img {
-            aspect-ratio: 3/4;
-            overflow: hidden;
-            border-radius: 3px;
-            background: #1a1a1a;
-            border: 1px solid var(--border);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .drop-img:hover {
-            border-color: var(--border-bright);
-            box-shadow: var(--glow-sm);
-        }
-
-        .drop-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: center center;
-            padding: 0.5rem;
-            filter: brightness(0.9) grayscale(0.1);
-            transition: transform 0.5s, filter 0.5s;
-        }
-
-        .drop-img:hover img {
-            transform: scale(1.03);
-            filter: brightness(1) grayscale(0);
-        }
-
-        .drop-text { padding: 1rem 0; }
-
-        .drop-meta {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.35em;
-            color: var(--gray-light);
-            text-transform: uppercase;
-            margin-bottom: 0.75rem;
-            font-weight: 400;
-        }
-
-        .drop-name {
-            font-family: 'Oxanium', sans-serif; font-weight: 800;
-            font-size: clamp(3rem, 5vw, 5rem);
-            letter-spacing: 0.04em;
-            line-height: 0.95;
-            color: var(--white);
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            text-shadow: var(--glow-md);
-        }
-
-        .drop-desc {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            color: var(--gray-light);
-            font-weight: 400;
-            text-transform: uppercase;
-            line-height: 2;
-            margin-bottom: 2rem;
-        }
-
-        .btn-shop {
-            display: inline-block;
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 400;
-            padding: 0.85rem 2.5rem;
-            text-decoration: none;
-            border: 1.5px solid rgba(255,255,255,0.5);
-            color: var(--white);
-            border-radius: 2px;
-            transition: all 0.25s;
-        }
-
-        .btn-shop:hover {
-            background: var(--white);
-            color: #000;
-            border-color: var(--white);
-            box-shadow: var(--glow-md);
-        }
-
-        /* ── COLLECTIVE ── */
-        #collective {
-            background: #060606;
-            border-top: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .collective-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .collective-img {
-            aspect-ratio: 4/5;
-            overflow: hidden;
-            border-radius: 3px;
-            background: #1a1a1a;
-            border: 1px solid var(--border);
-        }
-
-        .collective-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.5) grayscale(0.2);
-        }
-
-        .collective-text {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .collective-label {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.62rem;
-            letter-spacing: 0.4em;
-            color: var(--gray-light);
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            font-weight: 400;
-        }
-
-        .collective-manifesto {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.12em;
-            color: var(--off-white);
-            text-transform: uppercase;
-            line-height: 2.4;
-            margin-bottom: 2.5rem;
-            font-weight: 300;
-        }
-
-        .btn-join {
-            display: inline-block;
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 400;
-            padding: 0.85rem 2.5rem;
-            text-decoration: none;
-            border: 1.5px solid rgba(255,255,255,0.25);
-            color: var(--white);
-            border-radius: 2px;
-            transition: all 0.25s;
-        }
-
-        .btn-join:hover {
-            border-color: rgba(255,255,255,0.7);
-            background: rgba(255,255,255,0.04);
-            box-shadow: var(--glow-sm);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            background: #040404;
-            border-top: 1px solid var(--border);
-            padding: 2rem 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-logo {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.15em;
-            color: var(--white);
-            font-weight: 800;
-            text-shadow: var(--glow-sm);
-        }
-
-        .footer-copy {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.15em;
-            color: var(--gray);
-            text-transform: uppercase;
-            font-weight: 300;
-        }
-
-        .footer-nav {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .footer-nav a {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.15em;
-            color: var(--gray);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-weight: 400;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .footer-nav a:hover {
-            color: var(--white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-
-        .footer-legal {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
-
-        .footer-legal a {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.12em;
-            color: var(--gray);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-weight: 400;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .footer-legal a:hover {
-            color: var(--white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-
-        .footer-bottom {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding-top: 1.5rem;
-            margin-top: 1.5rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1.2rem;
-        }
-
-        .footer-social a {
-            color: var(--gray);
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-family: 'Oxanium', sans-serif;
-            letter-spacing: 0.1em;
-            font-weight: 400;
-            transition: color 0.2s, text-shadow 0.2s;
-            text-transform: uppercase;
-        }
-
-        .footer-social a:hover {
-            color: var(--white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        /* ── ANIMATIONS ── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: rotate(45deg) translateY(0); }
-            50% { transform: rotate(45deg) translateY(4px); }
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 1024px) {
-            .builds-grid { grid-template-columns: repeat(2, 1fr); }
-            .reels-grid { grid-template-columns: repeat(3, 1fr); }
-            .collective-inner { grid-template-columns: 1fr; }
-            .collective-img { display: none; }
-        }
-
-        @media (max-width: 768px) {
-            nav { padding: 1rem 1.5rem; }
-            .nav-links { display: none; }
-            section { padding: 3.5rem 1.5rem; }
-            .builds-inner, .reels-inner { grid-template-columns: 1fr; gap: 1.5rem; }
-            .builds-grid { grid-template-columns: repeat(2, 1fr); }
-            .reels-grid { grid-template-columns: repeat(2, 1fr); }
-            .drop-inner { grid-template-columns: 1fr; }
-            .drop-images { grid-template-columns: 1fr 1fr; }
-            footer { flex-direction: column; gap: 1.5rem; text-align: center; }
-            .footer-nav { flex-wrap: wrap; justify-content: center; gap: 1rem; }
-            .footer-bottom { flex-direction: column; gap: 1rem; }
-            .footer-legal { flex-wrap: wrap; justify-content: center; }
-        }
-
-        .ph {
-            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2a2a2a;
-            font-family: 'Oxanium', sans-serif;
-            font-size: 0.65rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHANTOM</title>
+<link rel="icon" type="image/png" href="imgs/favicon.png">
+<link rel="apple-touch-icon" href="imgs/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --white: #ffffff;
+        --gray-light: #999;
+        --gray: #666;
+        --dark: #0a0a0a;
+    }
+
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: #050505;
+        color: var(--white);
+        overflow: hidden;
+    }
+
+    /* ── BACKDROP ── */
+    .bg {
+        position: fixed;
+        inset: 0;
+        background-image: url('imgs/background.png');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.25;
+        filter: brightness(0.4) contrast(1.2) grayscale(0.3);
+    }
+
+    .bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 75%);
+    }
+
+    /* Slow ambient light drifting behind the logo. Kept intentionally
+       small (not full-viewport) so the browser only has a small area to
+       repaint each frame — full-screen animated gradients are one of the
+       most common causes of janky animation. */
+    .ambient-light {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 700px;
+        height: 700px;
+        margin: -350px 0 0 -350px;
+        pointer-events: none;
+        background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 60%);
+        animation: drift 24s ease-in-out infinite;
+        transform: translateZ(0);
+        will-change: transform, opacity;
+    }
+
+    @keyframes drift {
+        0%, 100% { transform: translateZ(0) scale(1);    opacity: 0.7; }
+        50%      { transform: translateZ(0) scale(1.12); opacity: 1;   }
+    }
+
+    /* ── CENTER STAGE ── */
+    .stage {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        gap: 4.5rem;
+    }
+
+    /* Logo floats very gently, on its own GPU layer so it never has to
+       wait on anything else painting. */
+    .logo {
+        width: clamp(220px, 34vw, 420px);
+        height: auto;
+        filter: drop-shadow(0 0 30px rgba(255,255,255,0.15)) drop-shadow(0 0 80px rgba(255,255,255,0.06));
+        animation: float 9s ease-in-out infinite;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateZ(0) translateY(0); }
+        50%      { transform: translateZ(0) translateY(-8px); }
+    }
+
+    /* ── COUNTDOWN ── */
+    .countdown {
+        display: flex;
+        gap: clamp(1.5rem, 5vw, 3.5rem);
+    }
+
+    .unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .unit-value {
+        font-family: 'Oxanium', sans-serif;
+        font-weight: 700;
+        font-size: clamp(1.8rem, 5vw, 3.2rem);
+        line-height: 1;
+        min-width: 1.6em;
+        color: var(--white);
+        text-shadow: 0 0 12px rgba(255,255,255,0.18);
+    }
+
+    .unit-label {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        color: var(--gray-light);
+        font-weight: 400;
+    }
+
+    .divider {
+        font-family: 'Oxanium', sans-serif;
+        font-weight: 300;
+        font-size: clamp(1.4rem, 4vw, 2.4rem);
+        color: rgba(255,255,255,0.15);
+        align-self: flex-start;
+        margin-top: 0.1em;
+    }
+
+    .until {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.35em;
+        color: var(--gray);
+        font-weight: 400;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .logo, .ambient-light { animation: none; }
+    }
+
+    @media (max-width: 480px) {
+        .divider { display: none; }
+        .countdown { gap: 1.4rem; }
+    }
+</style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav>
-    <a href="#" class="nav-logo"><img src="imgs/frontembossed.png" alt="PHANTOM"></a>
-    <ul class="nav-links">
-        <li><a href="#builds">Garage</a></li>
-        <li><a href="#builds">Members</a></li>
-        <li><a href="#reels">Media</a></li>
-        <li><a href="#drop">Shop</a></li>
-        <li><a href="#collective">Contact</a></li>
-    </ul>
-    <div class="nav-social">
-        <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
-        <a href="#" target="_blank" rel="noopener">TK</a>
-        <a href="#" target="_blank" rel="noopener">YT</a>
-    </div>
-</nav>
+<div class="bg"></div>
+<div class="ambient-light"></div>
 
-<!-- ── HERO ── -->
-<section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-        <img src="imgs/frontembossed.png" alt="PHANTOM" class="hero-logo-img">
-        <p class="hero-tagline"></p>
-        <div class="hero-btns">
-            <a href="#builds" class="btn-primary">Enter Garage</a>
-            <a href="#drop" class="btn-outline">Shop Collection</a>
+<div class="stage">
+    <img src="imgs/frontembossed.png" alt="PHANTOM" class="logo">
+
+    <div>
+        <div class="countdown" id="countdown">
+            <div class="unit"><span class="unit-value" id="days">00</span><span class="unit-label">Days</span></div>
+            <span class="divider">:</span>
+            <div class="unit"><span class="unit-value" id="hours">00</span><span class="unit-label">Hrs</span></div>
+            <span class="divider">:</span>
+            <div class="unit"><span class="unit-value" id="minutes">00</span><span class="unit-label">Min</span></div>
+            <span class="divider">:</span>
+            <div class="unit"><span class="unit-value" id="seconds">00</span><span class="unit-label">Sec</span></div>
         </div>
     </div>
-    <div class="hero-scroll">
-        <span>Scroll Down</span>
-        <div class="scroll-arrow"></div>
-    </div>
-</section>
-
-<!-- ── BUILDS ── -->
-<section id="builds">
-    <div class="builds-inner">
-        <div>
-            <p class="section-label">Featured</p>
-            <h2 class="section-title">BUILDS</h2>
-            <a href="#" class="section-link">View All Builds →</a>
-        </div>
-        <div class="builds-grid">
-
-            <div class="build-card" data-index="0">
-                <a href="members/gage/gage.html" class="build-card-inner">
-                    <img src="imgs/members/gage1.jpg" alt="VA WRX"
-                         onerror="this.parentNode.parentNode.classList.add('ph');this.style.display='none'">
-                    <div class="build-card-info">
-                        <div class="build-member">Gage</div>
-                        <div class="build-car">VA WRX</div>
-                        <div class="build-spec">Bagged</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="build-card" data-index="0">
-                <a href="members/isaac/isaac.html" class="build-card-inner">
-                    <img src="members/isaac/3.jpeg" alt="Honda Accord"
-                         onerror="this.parentNode.parentNode.classList.add('ph');this.style.display='none'">
-                    <div class="build-card-info">
-                        <div class="build-member">Isaac</div>
-                        <div class="build-car">Honda Accord</div>
-                        <div class="build-spec">Bagged</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="build-card coming-soon">
-                <div class="coming-soon-inner">
-                    <div class="coming-soon-icon">+</div>
-                    <div class="coming-soon-text">Coming Soon</div>
-                </div>
-            </div>
-
-            <div class="build-card coming-soon">
-                <div class="coming-soon-inner">
-                    <div class="coming-soon-icon">+</div>
-                    <div class="coming-soon-text">Coming Soon</div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ── REELS ── -->
-<section id="reels">
-    <div class="reels-inner">
-        <div>
-            <p class="section-label">Member</p>
-            <h2 class="section-title">REELS</h2>
-            <a href="https://instagram.com/phantom.nwa" class="section-link" target="_blank" rel="noopener">Watch More →</a>
-        </div>
-        <div class="reels-grid">
-            <div class="reel-card">
-                <video src="members/gage/gage.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
-                <img src="members/gage/1.PNG" alt="Reel 1" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="reel-card">
-                <video src="imgs/videos/ian.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
-                <img src="imgs/members/ian.jpeg" alt="Reel 2" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="reel-card">
-                <video src="imgs/videos/noel.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
-                <img src="imgs/members/noel.png" alt="Reel 3" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="reel-card">
-                <video src="imgs/videos/noel1.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
-                <img src="imgs/members/noel1.png" alt="Reel 4" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ── DROP ── -->
-<section id="drop">
-    <div class="drop-inner">
-        <div class="drop-text">
-            <p class="drop-meta">Latest Drop</p>
-            <h2 class="drop-name">DROP<br>02</h2>
-            <a href="" class="btn-shop">Coming Soon</a>
-        </div>
-        </div>
-</section>
-
-<!-- ── COLLECTIVE ── -->
-<section id="collective">
-    <div class="collective-inner">
-        <div class="collective-img">
-            <img src="imgs/members/gage.jpg" alt="Phantom Member" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-        </div>
-        <div class="collective-text">
-            <p class="collective-label">The Collective</p>
-            <p class="collective-manifesto">
-                We <3 our supporters.
-            </p>
-            <a href="https://forms.gle/rMgB2YeTz7c9rMPb8" target="_blank" rel="noopener" class="btn-join">Join the Movement</a>
-        </div>
-        <div class="collective-img">
-            <img src="imgs/members/charlie1.jpg" alt="Phantom Member" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-        </div>
-    </div>
-</section>
-
-<!-- ── FOOTER ── -->
-<footer>
-    <span class="footer-logo"></span>
-    <ul class="footer-nav">
-        <li><a href="#builds">Garage</a></li>
-        <li><a href="#builds">Members</a></li>
-        <li><a href="#reels">Media</a></li>
-        <li><a href="#drop">Shop</a></li>
-        <li><a href="#collective">Contact</a></li>
-    </ul>
-    <div class="footer-social">
-        <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
-        <a href="#" target="_blank" rel="noopener">TK</a>
-        <a href="#" target="_blank" rel="noopener">YT</a>
-    </div>
-    <div class="footer-bottom">
-        <p class="footer-copy">© 2026 Phantom Collective</p>
-        <ul class="footer-legal">
-            <li><a href="privacy-policy.html">Privacy Policy</a></li>
-            <li><a href="terms-of-service.html">Terms of Service</a></li>
-            <li><a href="cookie-policy.html">Cookie Policy</a></li>
-        </ul>
-    </div>
-</footer>
+</div>
 
 <script>
-    const nav = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > window.innerHeight * 0.8) {
-            nav.style.background = 'rgba(6,6,6,0.97)';
-            nav.style.backdropFilter = 'blur(12px)';
-            nav.style.borderBottom = '1px solid rgba(255,255,255,0.07)';
-        } else {
-            nav.style.background = 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%)';
-            nav.style.backdropFilter = '';
-            nav.style.borderBottom = '';
+    // Thursday, Sept 24, 2026, midnight Central Time (CDT, UTC-5 in September).
+    // Written as a fixed UTC instant so everyone worldwide hits zero at the
+    // same real-world moment, regardless of their own timezone.
+    const target = Date.UTC(2026, 8, 24, 5, 0, 0);
+
+    const daysEl    = document.getElementById('days');
+    const hoursEl   = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+        const diff = target - Date.now();
+
+        if (diff <= 0) {
+            daysEl.textContent = hoursEl.textContent = minutesEl.textContent = secondsEl.textContent = '00';
+            document.querySelector('.until').textContent = "It's here.";
+            clearInterval(timer);
+            return;
         }
-    });
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(el => {
-            if (el.isIntersecting) {
-                el.target.style.opacity = '1';
-                el.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
+        const days    = Math.floor(diff / 86400000);
+        const hours   = Math.floor((diff % 86400000) / 3600000);
+        const minutes = Math.floor((diff % 3600000) / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
 
-    document.querySelectorAll('.build-card, .reel-card, .drop-img, .collective-img').forEach((el, i) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(24px)';
-        el.style.transition = `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease`;
-        observer.observe(el);
-    });
-
-    // Detect touch device (iOS, Android)
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
-    // Ensure all videos have correct iOS attributes set via JS too
-    document.querySelectorAll('.reel-card video').forEach(video => {
-        video.muted = true;
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-    });
-
-    if (!isTouchDevice) {
-        // Desktop: hover to play/pause
-        document.querySelectorAll('.reel-card').forEach(card => {
-            const video = card.querySelector('video');
-            if (!video) return;
-            card.addEventListener('mouseenter', () => video.play().catch(() => {}));
-            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
-        });
-    } else {
-        // iOS / touch: autoplay when card is ≥50% visible, pause when out of view
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const card = entry.target;
-                const video = card.querySelector('video');
-                const img = card.querySelector('img');
-                if (!video) return;
-                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-                    video.play().catch(() => {});
-                    if (img) img.style.opacity = '0';
-                } else {
-                    video.pause();
-                    video.currentTime = 0;
-                    if (img) img.style.opacity = '1';
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.reel-card').forEach(card => videoObserver.observe(card));
+        daysEl.textContent    = pad(days);
+        hoursEl.textContent   = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
     }
+
+    tick();
+    const timer = setInterval(tick, 1000);
 </script>
 
 </body>

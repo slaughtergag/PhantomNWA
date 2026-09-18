@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHANTOM</title>
+    <link rel="icon" type="image/png" href="imgs/favicon.png">
+    <link rel="apple-touch-icon" href="imgs/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -139,17 +141,6 @@
                 rgba(0,0,0,0.85) 100%);
         }
 
-        /* subtle radial glow behind logo */
-        .hero-glow {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
-            z-index: 1;
-            pointer-events: none;
-        }
-
         .hero-content {
             position: relative;
             text-align: center;
@@ -219,11 +210,12 @@
             box-shadow: var(--glow-sm);
         }
 
+        /* FIX: Use left:0/right:0 instead of left:50%+translateX for iOS Safari centering */
         .hero-scroll {
             position: absolute;
             bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -716,6 +708,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .footer-logo {
@@ -756,6 +750,40 @@
         .footer-nav a:hover {
             color: var(--white);
             text-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .footer-legal a {
+            font-family: 'Oxanium', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            color: var(--gray);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 400;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .footer-bottom {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--border);
         }
 
         .footer-social {
@@ -809,6 +837,8 @@
             .drop-images { grid-template-columns: 1fr 1fr; }
             footer { flex-direction: column; gap: 1.5rem; text-align: center; }
             .footer-nav { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .footer-bottom { flex-direction: column; gap: 1rem; }
+            .footer-legal { flex-wrap: wrap; justify-content: center; }
         }
 
         .ph {
@@ -846,10 +876,9 @@
 <!-- ── HERO ── -->
 <section id="hero">
     <div class="hero-bg"></div>
-    <div class="hero-glow"></div>
     <div class="hero-content">
         <img src="imgs/frontembossed.png" alt="PHANTOM" class="hero-logo-img">
-        <p class="hero-tagline">Built Different.</p>
+        <p class="hero-tagline"></p>
         <div class="hero-btns">
             <a href="#builds" class="btn-primary">Enter Garage</a>
             <a href="#drop" class="btn-outline">Shop Collection</a>
@@ -883,11 +912,16 @@
                 </a>
             </div>
 
-            <div class="build-card coming-soon">
-                <div class="coming-soon-inner">
-                    <div class="coming-soon-icon">+</div>
-                    <div class="coming-soon-text">Coming Soon</div>
-                </div>
+            <div class="build-card" data-index="0">
+                <a href="members/isaac/isaac.html" class="build-card-inner">
+                    <img src="members/isaac/3.jpeg" alt="Honda Accord"
+                         onerror="this.parentNode.parentNode.classList.add('ph');this.style.display='none'">
+                    <div class="build-card-info">
+                        <div class="build-member">Isaac</div>
+                        <div class="build-car">Honda Accord</div>
+                        <div class="build-spec">Bagged</div>
+                    </div>
+                </a>
             </div>
 
             <div class="build-card coming-soon">
@@ -918,28 +952,23 @@
         </div>
         <div class="reels-grid">
             <div class="reel-card">
-                <video src="members/gage/gage.mp4" muted loop playsinline preload="none"></video>
+                <video src="members/gage/gage.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="members/gage/1.PNG" alt="Reel 1" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/ian.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/ian.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/ian.jpeg" alt="Reel 2" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/noel.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/noel.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/noel.png" alt="Reel 3" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
             <div class="reel-card">
-                <video src="imgs/videos/noel1.mp4" muted loop playsinline preload="none"></video>
+                <video src="imgs/videos/noel1.mp4" muted loop playsinline webkit-playsinline preload="none"></video>
                 <img src="imgs/members/noel1.png" alt="Reel 4" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-                <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-            <div class="reel-card">
-                <video src="imgs/videos/jareth.mp4" muted loop playsinline preload="none"></video>
-                <img src="imgs/members/jareth.jpg" alt="Reel 5" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
                 <div class="reel-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
         </div>
@@ -951,19 +980,10 @@
     <div class="drop-inner">
         <div class="drop-text">
             <p class="drop-meta">Latest Drop</p>
-            <h2 class="drop-name">DROP<br>01</h2>
-            <p class="drop-desc">Limited Pieces.<br>Built for the Culture.</p>
-            <a href="stickers/stickerList.html" class="btn-shop">Shop Now</a>
+            <h2 class="drop-name">DROP<br>02</h2>
+            <a href="" class="btn-shop">Coming Soon</a>
         </div>
-        <div class="drop-images">
-            <div class="drop-img">
-                <img src="imgs/Merch/shirtdrop.png" alt="Phantom Hoodie" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-            </div>
-            <div class="drop-img">
-                <img src="imgs/Merch/phantom.png" alt="Phantom Sticker" onerror="this.parentNode.classList.add('ph');this.style.display='none'">
-            </div>
         </div>
-    </div>
 </section>
 
 <!-- ── COLLECTIVE ── -->
@@ -1000,7 +1020,14 @@
         <a href="#" target="_blank" rel="noopener">TK</a>
         <a href="#" target="_blank" rel="noopener">YT</a>
     </div>
-    <p class="footer-copy">© 2026 Phantom Collective</p>
+    <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Phantom Collective</p>
+        <ul class="footer-legal">
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html">Terms of Service</a></li>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+        </ul>
+    </div>
 </footer>
 
 <script>
@@ -1033,13 +1060,46 @@
         observer.observe(el);
     });
 
-    document.querySelectorAll('.reel-card').forEach(card => {
-        const video = card.querySelector('video');
-        card.addEventListener('mouseenter', () => { if (video) video.play(); });
-        card.addEventListener('mouseleave', () => {
-            if (video) { video.pause(); video.currentTime = 0; }
-        });
+    // Detect touch device (iOS, Android)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    // Ensure all videos have correct iOS attributes set via JS too
+    document.querySelectorAll('.reel-card video').forEach(video => {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
     });
+
+    if (!isTouchDevice) {
+        // Desktop: hover to play/pause
+        document.querySelectorAll('.reel-card').forEach(card => {
+            const video = card.querySelector('video');
+            if (!video) return;
+            card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+        });
+    } else {
+        // iOS / touch: autoplay when card is ≥50% visible, pause when out of view
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                const video = card.querySelector('video');
+                const img = card.querySelector('img');
+                if (!video) return;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    video.play().catch(() => {});
+                    if (img) img.style.opacity = '0';
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                    if (img) img.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.reel-card').forEach(card => videoObserver.observe(card));
+    }
 </script>
 
 </body>
