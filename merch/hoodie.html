@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" href="../imgs/favicon.png" type="image/png">
 <title>Build your passion - PHANTOM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,13 +29,15 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
         position: sticky; top: 0; z-index: 100;
         display: flex; align-items: center; justify-content: space-between;
         padding: 1.2rem 3rem;
+        padding-top: calc(1.2rem + env(safe-area-inset-top, 0px));
         background: rgba(6,6,6,0.95);
         backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border);
@@ -65,10 +67,11 @@
     }
     .nav-social a:hover { color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.6); }
 
-    /* ── CONTAINER ── */
+    /* CONTAINER */
     .container {
         max-width: 1300px; margin: 0 auto;
-        padding: 5rem 3rem; flex: 1; width: 100%;
+        padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+        flex: 1; width: 100%;
     }
     .section-label {
         font-family: 'Oxanium', sans-serif;
@@ -81,28 +84,27 @@
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
         letter-spacing: 0.08em; line-height: 1.1;
         color: var(--white); text-shadow: var(--glow-md);
-        text-align: center; text-transform: uppercase; margin-bottom: 3.5rem;
+        text-align: center; text-transform: uppercase; margin-bottom: 2rem;
     }
 
-    /* ── PRODUCT LAYOUT ── */
+    /* PRODUCT LAYOUT */
     .product-content {
         display: flex; gap: 4rem;
         flex-wrap: wrap; align-items: flex-start; justify-content: center;
     }
 
-    /* ── CAROUSEL ── */
-    .carousel-wrap { position: relative; width: 100%; max-width: 440px; }
+    /* CAROUSEL */
+    .carousel-wrap { position: relative; width: 100%; max-width: 280px; }
 
     .product-image {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: var(--dark);
+        border: none;
         border-radius: 3px;
         overflow: hidden;
-        transition: border-color 0.3s, box-shadow 0.3s, background 0.4s;
+        transition: box-shadow 0.3s, background 0.4s;
         position: relative;
     }
     .product-image:hover {
-        border-color: var(--border-bright);
         box-shadow: var(--glow-sm);
     }
 
@@ -114,24 +116,27 @@
 
     .slide {
         min-width: 100%;
+        aspect-ratio: 2 / 3;
+        max-height: 55vh;
         padding: 0;
         display: flex; align-items: center; justify-content: center;
     }
 
     .slide img {
         display: block;
-        width: 100%; height: auto;
-        max-height: 340px;
+        width: 100%; height: 100%;
         object-fit: cover;
         object-position: center;
         transition: filter 0.35s ease;
     }
 
-    /* life shots: no filter, cover style */
-    .slide.life-shot { padding: 0; }
+    /* main product shot: show the whole transparent PNG instead of cropping it */
+    .slide:first-child img {
+        object-fit: contain;
+    }
+
+    /* life shots: no filter change on hover only */
     .slide.life-shot img {
-        max-height: 340px;
-        object-fit: cover;
         filter: brightness(0.85) grayscale(0.1) !important;
     }
     .slide.life-shot:hover img { filter: brightness(1) grayscale(0) !important; }
@@ -151,14 +156,23 @@
         border-radius: 2px;
         cursor: pointer;
         display: flex; align-items: center; justify-content: center;
-        transition: background 0.2s, border-color 0.2s;
+        transition: background 0.2s, border-color 0.2s, opacity 0.2s;
         backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+    }
+    .carousel-wrap:hover .carousel-btn {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .carousel-wrap:hover .carousel-btn:disabled {
+        opacity: 0.25;
     }
     .carousel-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
     .carousel-btn svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .carousel-btn.prev { left: 0.6rem; }
     .carousel-btn.next { right: 0.6rem; }
-    .carousel-btn:disabled { opacity: 0.25; cursor: default; }
+    .carousel-btn:disabled { cursor: default; }
 
     /* dots */
     .carousel-dots {
@@ -173,7 +187,7 @@
     }
     .dot.active { background: var(--white); transform: scale(1.25); }
 
-    /* ── DETAILS ── */
+    /* DETAILS */
     .product-details { max-width: 380px; }
 
     .product-price {
@@ -189,7 +203,7 @@
         line-height: 2; margin-bottom: 1.75rem; font-weight: 400;
     }
 
-    /* ── COLOR SELECTOR ── */
+    /* COLOR SELECTOR */
     .color-selector { margin-bottom: 1.75rem; }
     .color-label {
         font-family: 'Oxanium', sans-serif;
@@ -211,7 +225,7 @@
     .swatch-white { background: #ffffff; }
     .swatch-black { background: #111111; outline: 1px solid rgba(255,255,255,0.12); }
 
-    /* ── SIZE SELECTOR ── */
+    /* SIZE SELECTOR */
     .size-selector { margin-bottom: 1.75rem; }
     .size-swatches { display: flex; gap: 0.6rem; flex-wrap: wrap; }
     .size-btn {
@@ -267,7 +281,7 @@
         color: var(--gray);
     }
 
-    /* ── BUY BUTTON ── */
+    /* BUY BUTTON */
     .product-buttons { text-align: center; }
     .btn-shop {
         display: inline-block;
@@ -285,7 +299,7 @@
         border-color: var(--white); box-shadow: var(--glow-md);
     }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
         background: #040404;
         border-top: 1px solid var(--border);
@@ -297,24 +311,28 @@
         color: var(--gray); text-transform: uppercase; font-weight: 300;
     }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
         nav { padding: 1rem 1.5rem; }
         .nav-links { display: none; }
-        .container { padding: 3rem 1.5rem; }
-        .product-content { gap: 2rem; }
-        .btn-shop { width: 100%; }
+        .container { padding: 1.5rem 1.25rem; }
+        .product-content { gap: 1.5rem; }
+        .carousel-wrap { max-width: 220px; }
+        .btn-shop { width: 100%; max-width: 220px; }
+        .product-buttons button, .product-buttons a { width: 100% !important; max-width: 220px; }
+    }
+
+    @media (max-width: 380px) {
+        .carousel-wrap { max-width: 180px; }
     }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- NAV -->
 <nav>
     <a href="../index.html" class="nav-logo"><img src="../imgs/frontembossed.png" alt="PHANTOM"></a>
     <ul class="nav-links">
-        <li><a href="../index.html#builds">Garage</a></li>
-        <li><a href="../index.html#builds">Members</a></li>
         <li><a href="../index.html#reels">Media</a></li>
         <li><a href="../index.html#drop">Shop</a></li>
         <li><a href="../index.html#collective">Contact</a></li>
@@ -326,9 +344,8 @@
     </div>
 </nav>
 
-<!-- ── PRODUCT ── -->
+<!-- PRODUCT -->
 <section class="container">
-    <p class="section-label">Phantom Merch / Apparel</p>
     <h2 class="section-title">Build your passion</h2>
 
     <div class="product-content">
@@ -345,16 +362,17 @@
                 </button>
 
                 <div class="slides" id="slides">
-                    <!-- Slide 0: product render — CSS filter applies color -->
                     <div class="slide">
-                        <img src="../imgs/Front, White.png" alt="Build your passion">
+                        <img src="../imgs/Merch/Drop2/Hoodies/FrontTransparent.PNG" alt="Build your passion">
                     </div>
-                    <!-- Slide 1+: life / on-car shots — add as many as you want -->
-                    <div class="slide life-shot">
-                        <img src="../imgs/Back, White.png" alt="Build your passion on car">
+                     <div class="slide life-shot">
+                        <img src="../imgs/Merch/Drop2/Hoodies/Sunset.JPG">
                     </div>
                     <div class="slide life-shot">
-                        <img src="../imgs/Lifestyle Woman, White.jpg" alt="Build your passion detail">
+                        <img src="../imgs/Merch/Drop2/Hoodies/NoelFront.JPG">
+                    </div>
+                    <div class="slide life-shot">
+                        <img src="../imgs/Merch/Drop2/Hoodies/GageBack.JPG">
                     </div>
                 </div>
 
@@ -368,9 +386,6 @@
             <p class="product-price" id="productPrice">$60.00</p>
 
             <p class="product-description">
-                Soft, comfortable cotton hoodie<br>
-                <br>
-                Note: All purchases are made to order. Please allow up to 2 weeks to receive your product.
             </p>
 
             <div class="size-selector">
@@ -394,14 +409,13 @@
     </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>
     <p class="footer-copy">© 2026 Phantom Collective</p>
 </footer>
 
 <script src="../cart.js"></script>
 <script>
-    // ── PRODUCT CONFIGURATION ────────────────────────────────────────────
     const variants = {
         white: {
             S:  { price: 60.00, catalogId: 'OPMVSOEYRLBUX4J5PZPXHIBS' },
@@ -414,17 +428,14 @@
     const PRODUCT_NAME = 'Build your passion';
     const PRODUCT_IMG  = '../imgs/Front, White.png';
 
-    // Your Cloudflare Worker
     const API_BASE = 'https://checkout.phantomnwa.shop';
 
-    // ── STATE ────────────────────────────────────────────────────────────
     let currentColor = 'white';
     let currentSize  = 'M';
 
     let inventory = {};
     let inventoryLoaded = false;
 
-    // ── CAROUSEL ─────────────────────────────────────────────────────────
     const slidesEl = document.getElementById('slides');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -438,750 +449,262 @@
     slideEls.forEach((_, i) => {
         const d = document.createElement('div');
         d.className = 'dot' + (i === 0 ? ' active' : '');
-
         d.addEventListener('click', () => goTo(i));
-
         dotsWrap.appendChild(d);
     });
 
     function goTo(n) {
         current = Math.max(0, Math.min(n, total - 1));
-
-        slidesEl.style.transform =
-            `translateX(-${current * 100}%)`;
-
-        dotsWrap
-            .querySelectorAll('.dot')
-            .forEach((d, i) => {
-                d.classList.toggle(
-                    'active',
-                    i === current
-                );
-            });
-
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        dotsWrap.querySelectorAll('.dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
         prevBtn.disabled = current === 0;
         nextBtn.disabled = current === total - 1;
     }
 
-    prevBtn.addEventListener(
-        'click',
-        () => goTo(current - 1)
-    );
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
 
-    nextBtn.addEventListener(
-        'click',
-        () => goTo(current + 1)
-    );
-
-    // ── MOBILE SWIPE ─────────────────────────────────────────────────────
     let touchStartX = 0;
-
-    slidesEl.addEventListener(
-        'touchstart',
-        e => {
-            touchStartX = e.touches[0].clientX;
-        },
-        { passive: true }
-    );
-
-    slidesEl.addEventListener(
-        'touchend',
-        e => {
-            const diff =
-                touchStartX -
-                e.changedTouches[0].clientX;
-
-            if (Math.abs(diff) > 40) {
-                goTo(
-                    diff > 0
-                        ? current + 1
-                        : current - 1
-                );
-            }
-        }
-    );
+    slidesEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    slidesEl.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) { goTo(diff > 0 ? current + 1 : current - 1); }
+    });
 
     goTo(0);
 
-    // ── ELEMENTS ─────────────────────────────────────────────────────────
-    const imageWrap =
-        document.getElementById('productImageWrap');
+    const imageWrap = document.getElementById('productImageWrap');
+    const priceEl = document.getElementById('productPrice');
+    const buyBtn = document.getElementById('buyBtn');
+    const colorName = document.getElementById('colorName');
+    const swatches = document.querySelectorAll('.swatch');
+    const addBtn = document.getElementById('addToCartBtn');
+    const sizeSwatches = document.getElementById('sizeSwatches');
+    const sizeLabel = document.getElementById('sizeLabel');
+    const inventoryStatus = document.getElementById('inventoryStatus');
 
-    const priceEl =
-        document.getElementById('productPrice');
-
-    const buyBtn =
-        document.getElementById('buyBtn');
-
-    const colorName =
-        document.getElementById('colorName');
-
-    const swatches =
-        document.querySelectorAll('.swatch');
-
-    const addBtn =
-        document.getElementById('addToCartBtn');
-
-    const sizeSwatches =
-        document.getElementById('sizeSwatches');
-
-    const sizeLabel =
-        document.getElementById('sizeLabel');
-
-    const inventoryStatus =
-        document.getElementById('inventoryStatus');
-
-    // ── VARIANT ──────────────────────────────────────────────────────────
     function currentVariant() {
-        return (
-            variants[currentColor] &&
-            variants[currentColor][currentSize]
-        );
+        return (variants[currentColor] && variants[currentColor][currentSize]);
     }
 
-    // ── INVENTORY ────────────────────────────────────────────────────────
     function getStock(catalogId) {
-
-        if (!inventory[catalogId]) {
-            return 0;
-        }
-
+        if (!inventory[catalogId]) { return 0; }
         const item = inventory[catalogId];
-
-        if (
-            item.state &&
-            item.state !== 'IN_STOCK'
-        ) {
-            return 0;
-        }
-
-        return Math.max(
-            0,
-            Number(item.quantity || 0)
-        );
+        if (item.state && item.state !== 'IN_STOCK') { return 0; }
+        return Math.max(0, Number(item.quantity || 0));
     }
 
     async function loadInventory() {
-
-        inventoryStatus.textContent =
-            'Checking availability...';
-
-        inventoryStatus.className =
-            'inventory-status';
-
+        inventoryStatus.textContent = 'Checking availability...';
+        inventoryStatus.className = 'inventory-status';
         try {
-
             const ids = [];
-
-            Object.values(
-                variants[currentColor]
-            ).forEach(variant => {
-
-                if (variant.catalogId) {
-                    ids.push(variant.catalogId);
-                }
-
+            Object.values(variants[currentColor]).forEach(variant => {
+                if (variant.catalogId) { ids.push(variant.catalogId); }
             });
-
-            const response =
-                await fetch(
-                    `${API_BASE}/inventory?ids=${encodeURIComponent(ids.join(','))}`,
-                    {
-                        method: 'GET',
-                        cache: 'no-store'
-                    }
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    `Inventory request failed: ${response.status}`
-                );
-            }
-
-            const data =
-                await response.json();
-
-            inventory =
-                data.inventory || {};
-
+            const response = await fetch(`${API_BASE}/inventory?ids=${encodeURIComponent(ids.join(','))}`, { method: 'GET', cache: 'no-store' });
+            if (!response.ok) { throw new Error(`Inventory request failed: ${response.status}`); }
+            const data = await response.json();
+            inventory = data.inventory || {};
             inventoryLoaded = true;
-
             renderSizeButtons();
             updateCurrentSelection();
-
         }
         catch (error) {
-
-            console.error(
-                'Inventory error:',
-                error
-            );
-
+            console.error('Inventory error:', error);
             inventoryLoaded = false;
-
-            inventoryStatus.textContent =
-                'Availability unavailable';
-
-            inventoryStatus.className =
-                'inventory-status';
-
-            // Don't disable everything if the
-            // inventory service temporarily fails.
+            inventoryStatus.textContent = 'Availability unavailable';
+            inventoryStatus.className = 'inventory-status';
             renderSizeButtons(false);
         }
     }
 
-    // ── SIZE BUTTONS ─────────────────────────────────────────────────────
-    function renderSizeButtons(
-        useInventory = true
-    ) {
-
-        const sizes =
-            Object.keys(
-                variants[currentColor] || {}
-            );
-
+    function renderSizeButtons(useInventory = true) {
+        const sizes = Object.keys(variants[currentColor] || {});
         sizeSwatches.innerHTML = '';
-
         sizes.forEach(size => {
-
-            const variant =
-                variants[currentColor][size];
-
-            const stock =
-                useInventory
-                    ? getStock(variant.catalogId)
-                    : null;
-
-            const btn =
-                document.createElement('button');
-
+            const variant = variants[currentColor][size];
+            const stock = useInventory ? getStock(variant.catalogId) : null;
+            const btn = document.createElement('button');
             btn.type = 'button';
-
-            btn.className =
-                'size-btn' +
-                (
-                    size === currentSize
-                        ? ' active'
-                        : ''
-                );
-
+            btn.className = 'size-btn' + (size === currentSize ? ' active' : '');
             btn.textContent = size;
-
-            if (
-                useInventory &&
-                stock <= 0
-            ) {
-
+            if (useInventory && stock <= 0) {
                 btn.disabled = true;
-
-                btn.title =
-                    `${size} — Sold Out`;
-
+                btn.title = `${size} — Sold Out`;
+            } else {
+                btn.addEventListener('click', () => selectSize(size));
             }
-            else {
-
-                btn.addEventListener(
-                    'click',
-                    () => selectSize(size)
-                );
-
-            }
-
             sizeSwatches.appendChild(btn);
         });
 
-        // If currently selected size is sold out,
-        // automatically select the first available size.
         if (useInventory) {
-
-            const current =
-                variants[currentColor][currentSize];
-
-            const currentStock =
-                current
-                    ? getStock(current.catalogId)
-                    : 0;
-
+            const current = variants[currentColor][currentSize];
+            const currentStock = current ? getStock(current.catalogId) : 0;
             if (currentStock <= 0) {
-
-                const firstAvailable =
-                    sizes.find(size => {
-
-                        return (
-                            getStock(
-                                variants[currentColor][size]
-                                    .catalogId
-                            ) > 0
-                        );
-
-                    });
-
-                if (firstAvailable) {
-                    currentSize =
-                        firstAvailable;
-                }
+                const firstAvailable = sizes.find(size => getStock(variants[currentColor][size].catalogId) > 0);
+                if (firstAvailable) { currentSize = firstAvailable; }
             }
         }
 
-        // Update active button
-        sizeSwatches
-            .querySelectorAll('.size-btn')
-            .forEach(btn => {
+        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === currentSize);
+        });
 
-                btn.classList.toggle(
-                    'active',
-                    btn.textContent === currentSize
-                );
-
-            });
-
-        if (sizeLabel) {
-            sizeLabel.textContent =
-                currentSize;
-        }
+        if (sizeLabel) { sizeLabel.textContent = currentSize; }
     }
 
-    // ── SIZE SELECTION ───────────────────────────────────────────────────
     function selectSize(size) {
-
-        if (
-            !variants[currentColor] ||
-            !variants[currentColor][size]
-        ) {
-            return;
-        }
-
-        const variant =
-            variants[currentColor][size];
-
-        // Don't allow selecting a known
-        // sold-out variation.
+        if (!variants[currentColor] || !variants[currentColor][size]) { return; }
+        const variant = variants[currentColor][size];
         if (inventoryLoaded) {
-
-            const stock =
-                getStock(variant.catalogId);
-
-            if (stock <= 0) {
-                return;
-            }
+            const stock = getStock(variant.catalogId);
+            if (stock <= 0) { return; }
         }
-
-        currentSize =
-            size;
-
-        if (sizeLabel) {
-            sizeLabel.textContent =
-                size;
-        }
-
-        sizeSwatches
-            .querySelectorAll('.size-btn')
-            .forEach(btn => {
-
-                btn.classList.toggle(
-                    'active',
-                    btn.textContent === size
-                );
-
-            });
-
+        currentSize = size;
+        if (sizeLabel) { sizeLabel.textContent = size; }
+        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === size);
+        });
         refreshPriceAndButton();
         updateInventoryMessage();
     }
 
-    // ── COLOR SELECTION ──────────────────────────────────────────────────
     function selectVariant(color) {
-
-        if (!variants[color]) {
-            return;
-        }
-
-        currentColor =
-            color;
-
-        const sizesForColor =
-            Object.keys(
-                variants[color]
-            );
-
-        if (
-            !sizesForColor.includes(
-                currentSize
-            )
-        ) {
-            currentSize =
-                sizesForColor[0];
-        }
-
-        imageWrap.classList.toggle(
-            'variant-black',
-            color === 'black'
-        );
-
-        if (colorName) {
-
-            colorName.textContent =
-                color.charAt(0).toUpperCase() +
-                color.slice(1);
-        }
-
-        swatches.forEach(s => {
-
-            s.classList.toggle(
-                'active',
-                s.dataset.color === color
-            );
-
-        });
-
+        if (!variants[color]) { return; }
+        currentColor = color;
+        const sizesForColor = Object.keys(variants[color]);
+        if (!sizesForColor.includes(currentSize)) { currentSize = sizesForColor[0]; }
+        imageWrap.classList.toggle('variant-black', color === 'black');
+        if (colorName) { colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1); }
+        swatches.forEach(s => { s.classList.toggle('active', s.dataset.color === color); });
         renderSizeButtons();
-
-        if (sizeLabel) {
-            sizeLabel.textContent =
-                currentSize;
-        }
-
+        if (sizeLabel) { sizeLabel.textContent = currentSize; }
         refreshPriceAndButton();
-
-        // Reload inventory for this color
         loadInventory();
     }
 
-    swatches.forEach(s => {
+    swatches.forEach(s => { s.addEventListener('click', () => selectVariant(s.dataset.color)); });
 
-        s.addEventListener(
-            'click',
-            () => selectVariant(
-                s.dataset.color
-            )
-        );
-
-    });
-
-    // ── PRICE ────────────────────────────────────────────────────────────
     function refreshPriceAndButton() {
-
-        const v =
-            currentVariant();
-
-        if (!v) {
-            return;
-        }
-
-        priceEl.textContent =
-            '$' + v.price.toFixed(2);
-
-        if (buyBtn) {
-            buyBtn.href = '#';
-        }
+        const v = currentVariant();
+        if (!v) { return; }
+        priceEl.textContent = '$' + v.price.toFixed(2);
+        if (buyBtn) { buyBtn.href = '#'; }
     }
 
-    // ── INVENTORY MESSAGE ────────────────────────────────────────────────
     function updateInventoryMessage() {
-
         if (!inventoryLoaded) {
-
-            inventoryStatus.textContent =
-                'Availability unavailable';
-
-            inventoryStatus.className =
-                'inventory-status';
-
+            inventoryStatus.textContent = 'Availability unavailable';
+            inventoryStatus.className = 'inventory-status';
             return;
         }
-
-        const v =
-            currentVariant();
-
-        if (!v) {
-            return;
-        }
-
-        const stock =
-            getStock(v.catalogId);
-
+        const v = currentVariant();
+        if (!v) { return; }
+        const stock = getStock(v.catalogId);
         if (stock <= 0) {
-
-            inventoryStatus.textContent =
-                'Sold out';
-
-            inventoryStatus.className =
-                'inventory-status sold-out';
-
+            inventoryStatus.textContent = 'Sold out';
+            inventoryStatus.className = 'inventory-status sold-out';
             addBtn.disabled = true;
-
             return;
         }
-
         addBtn.disabled = false;
-
         if (stock <= 5) {
-
-            inventoryStatus.textContent =
-                `Only ${stock} left`;
-
-            inventoryStatus.className =
-                'inventory-status low';
-
-        }
-        else {
-
-            inventoryStatus.textContent =
-                'In stock';
-
-            inventoryStatus.className =
-                'inventory-status';
+            inventoryStatus.textContent = `Only ${stock} left`;
+            inventoryStatus.className = 'inventory-status low';
+        } else {
+            inventoryStatus.textContent = 'In stock';
+            inventoryStatus.className = 'inventory-status';
         }
     }
 
-    // ── UPDATE SELECTION ─────────────────────────────────────────────────
     function updateCurrentSelection() {
-
         refreshPriceAndButton();
         updateInventoryMessage();
     }
 
-    // ── ADD TO CART ──────────────────────────────────────────────────────
-    addBtn.addEventListener(
-        'click',
-        async () => {
-
-            const v =
-                currentVariant();
-
-            if (!v) {
-
-                alert(
-                    'Please select a size.'
-                );
-
+    addBtn.addEventListener('click', async () => {
+        const v = currentVariant();
+        if (!v) { alert('Please select a size.'); return; }
+        addBtn.disabled = true;
+        addBtn.textContent = 'Checking...';
+        try {
+            await loadInventory();
+            const freshVariant = currentVariant();
+            const stock = getStock(freshVariant.catalogId);
+            if (stock <= 0) {
+                alert(`Size ${currentSize} is sold out.`);
+                addBtn.textContent = 'Sold Out';
+                updateInventoryMessage();
                 return;
             }
-
-            // Re-check Square inventory
-            // immediately before adding.
-            addBtn.disabled = true;
-            addBtn.textContent =
-                'Checking...';
-
-            try {
-
-                await loadInventory();
-
-                const freshVariant =
-                    currentVariant();
-
-                const stock =
-                    getStock(
-                        freshVariant.catalogId
-                    );
-
-                if (stock <= 0) {
-
-                    alert(
-                        `Size ${currentSize} is sold out.`
-                    );
-
-                    addBtn.textContent =
-                        'Sold Out';
-
-                    updateInventoryMessage();
-
-                    return;
-                }
-
-                // Your existing cart system
-                window.PhantomCart.addItem({
-
-                    id:
-                        freshVariant.catalogId,
-
-                    name:
-                        PRODUCT_NAME,
-
-                    color:
-                        currentColor,
-
-                    size:
-                        currentSize,
-
-                    price:
-                        freshVariant.price,
-
-                    image:
-                        PRODUCT_IMG,
-
-                    noFilter:
-                        true
-                });
-
-                addBtn.textContent =
-                    'Added ✓';
-
-                setTimeout(() => {
-
-                    addBtn.textContent =
-                        'Add to Cart';
-
-                    updateInventoryMessage();
-
-                }, 1500);
-
-            }
-            catch (error) {
-
-                console.error(
-                    'Add to cart error:',
-                    error
-                );
-
-                addBtn.textContent =
-                    'Try Again';
-
-                addBtn.disabled =
-                    false;
-            }
+            window.PhantomCart.addItem({
+                id: freshVariant.catalogId,
+                name: PRODUCT_NAME,
+                color: currentColor,
+                size: currentSize,
+                price: freshVariant.price,
+                image: PRODUCT_IMG,
+                noFilter: true
+            });
+            addBtn.textContent = 'Added ✓';
+            setTimeout(() => {
+                addBtn.textContent = 'Add to Cart';
+                updateInventoryMessage();
+            }, 1500);
         }
-    );
+        catch (error) {
+            console.error('Add to cart error:', error);
+            addBtn.textContent = 'Try Again';
+            addBtn.disabled = false;
+        }
+    });
 
-    // ── BUY NOW ──────────────────────────────────────────────────────────
-    buyBtn.addEventListener(
-        'click',
-        async event => {
-
-            event.preventDefault();
-
-            const v =
-                currentVariant();
-
-            if (!v) {
-
-                alert(
-                    'Please select a size.'
-                );
-
+    buyBtn.addEventListener('click', async event => {
+        event.preventDefault();
+        const v = currentVariant();
+        if (!v) { alert('Please select a size.'); return; }
+        buyBtn.textContent = 'Checking...';
+        try {
+            await loadInventory();
+            const freshVariant = currentVariant();
+            const stock = getStock(freshVariant.catalogId);
+            if (stock <= 0) {
+                alert(`Size ${currentSize} is sold out.`);
+                buyBtn.textContent = 'Buy Now';
                 return;
             }
-
-            buyBtn.textContent =
-                'Checking...';
-
-            try {
-
-                // Re-check inventory
-                await loadInventory();
-
-                const freshVariant =
-                    currentVariant();
-
-                const stock =
-                    getStock(
-                        freshVariant.catalogId
-                    );
-
-                if (stock <= 0) {
-
-                    alert(
-                        `Size ${currentSize} is sold out.`
-                    );
-
-                    buyBtn.textContent =
-                        'Buy Now';
-
-                    return;
-                }
-
-                buyBtn.textContent =
-                    'Loading...';
-
-                const response =
-                    await fetch(
-                        `${API_BASE}/create-checkout`,
-                        {
-                            method: 'POST',
-
-                            headers: {
-                                'Content-Type':
-                                    'application/json'
-                            },
-
-                            body: JSON.stringify({
-
-                                cart: [
-                                    {
-                                        id:
-                                            freshVariant.catalogId,
-
-                                        qty:
-                                            1,
-
-                                        color:
-                                            currentColor,
-
-                                        size:
-                                            currentSize
-                                    }
-                                ]
-
-                            })
-                        }
-                    );
-
-                const data =
-                    await response.json();
-
-                if (
-                    !response.ok ||
-                    !data.checkoutUrl
-                ) {
-
-                    throw new Error(
-                        data.error ||
-                        'Unable to create checkout'
-                    );
-                }
-
-                window.location.href =
-                    data.checkoutUrl;
-
+            buyBtn.textContent = 'Loading...';
+            const response = await fetch(`${API_BASE}/create-checkout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    cart: [{ id: freshVariant.catalogId, qty: 1, color: currentColor, size: currentSize }]
+                })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.checkoutUrl) {
+                throw new Error(data.error || 'Unable to create checkout');
             }
-            catch (error) {
-
-                console.error(
-                    'Buy Now error:',
-                    error
-                );
-
-                alert(
-                    'Unable to start checkout. Please try again.'
-                );
-
-                buyBtn.textContent =
-                    'Buy Now';
-            }
+            window.location.href = data.checkoutUrl;
         }
-    );
+        catch (error) {
+            console.error('Buy Now error:', error);
+            alert('Unable to start checkout. Please try again.');
+            buyBtn.textContent = 'Buy Now';
+        }
+    });
 
-    // ── INITIALIZE ───────────────────────────────────────────────────────
     async function initializeProduct() {
-
-        // Render immediately
         renderSizeButtons(false);
-
         refreshPriceAndButton();
-
-        // Get live Square inventory
         await loadInventory();
     }
 
     initializeProduct();
-
-    // Refresh inventory every 30 seconds
-    setInterval(
-        loadInventory,
-        30000
-    );
+    setInterval(loadInventory, 30000);
 </script>
 
 </body>
