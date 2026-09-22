@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHANTOM</title>
+<link rel="icon" type="image/png" href="imgs/favicon.png">
+<link rel="apple-touch-icon" href="imgs/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --white: #ffffff;
+        --gray-light: #999;
+        --gray: #666;
+        --black: #000000;
+        --border: rgba(255,255,255,0.07);
+        --glow-sm: 0 0 12px rgba(255,255,255,0.12), 0 0 30px rgba(255,255,255,0.05);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--black);
+        color: var(--white);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV (from base template) ── */
+    nav {
+        position: sticky; top: 0; z-index: 100;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.2rem 3rem;
+        background: rgba(6,6,6,0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { text-decoration: none; display: flex; align-items: center; }
+    .nav-logo img {
+        height: 48px; width: auto;
+        filter: drop-shadow(var(--glow-sm)) brightness(1.1);
+        transition: filter 0.3s ease;
+    }
+    .nav-logo img:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)) brightness(1.3); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.78rem; letter-spacing: 0.18em;
+        color: var(--gray-light); text-decoration: none;
+        text-transform: uppercase; font-weight: 500;
+        transition: color 0.2s, text-shadow 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); text-shadow: 0 0 12px rgba(255,255,255,0.5); }
+    .nav-social { display: flex; gap: 1rem; align-items: center; }
+    .nav-social a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
+        color: var(--gray-light); text-decoration: none;
+        transition: color 0.2s, text-shadow 0.2s;
+        display: flex; align-items: center;
+    }
+    .nav-social a:hover { color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+    .cart-link svg {
+        width: 20px; height: 20px;
+        fill: none; stroke: currentColor; stroke-width: 1.8;
+        stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── SECTION SHELL ── */
+    section { padding: 2.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        max-width: 1400px;
+        margin: 0 auto 1rem;
+    }
+
+    .section-title {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+    }
+
+    .section-link {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        font-weight: 700;
+    }
+
+    .section-link:hover { color: var(--white); }
+
+    /* ── DROP ── */
+    .drop-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .drop-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+    }
+
+    .drop-img {
+        aspect-ratio: 3 / 4;
+        background: #111;
+        overflow: hidden;
+    }
+
+    .drop-img img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .drop-name {
+        font-family: 'Oxanium', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        line-height: 0.95;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .btn-shop {
+        display: inline-block;
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border: 1.5px solid var(--white);
+    }
+
+    .btn-shop:hover { background: var(--white); color: var(--black); }
+
+    /* ── COLLECTIVE ── */
+    .collective-inner {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    .collective-manifesto {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-join {
+        display: inline-block;
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border: 1.5px solid var(--border);
+    }
+
+    .btn-join:hover { border-color: var(--white); }
+
+    /* ── FOOTER (base template style, with legal links kept) ── */
+    footer {
+        background: #040404;
+        border-top: 1px solid var(--border);
+        padding: 2rem 3rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .footer-copy {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.6rem; letter-spacing: 0.15em;
+        color: var(--gray); text-transform: uppercase; font-weight: 300;
+    }
+    .footer-legal {
+        display: flex;
+        gap: 1.25rem;
+        list-style: none;
+    }
+    .footer-legal a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.1em;
+        color: var(--gray);
+        text-transform: uppercase;
+        transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+        .drop-inner { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+    }
+
+    @media (max-width: 640px) {
+        footer { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <a href="#" class="nav-logo"><img src="../imgs/frontembossed.png" alt="PHANTOM"></a>
+    <ul class="nav-links">
+        <li><a href="#drop">Shop</a></li>
+        <li><a href="#collective">Contact</a></li>
+    </ul>
+    <div class="nav-social">
+        <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
+        <a href="#" target="_blank" rel="noopener">TK</a>
+        <a href="#" target="_blank" rel="noopener">YT</a>
+    </div>
+</nav>
+
+<!-- ── DROP ── -->
+<section id="drop">
+    <div class="section-head">
+        <h2 class="section-title"></h2>
+    </div>
+    <div class="drop-inner">
+        <div>
+            <h2 class="drop-name">Drop 02</h2>
+            <a href="merchList.html" class="btn-shop">Shop Now</a>
+        </div>
+        <div class="drop-images">
+            <div class="drop-img">
+                <img src="../imgs/Merch/Drop2/Hoodies/Charlie Front.JPG" alt="Sunset Hoodie Front">
+            </div>
+            <div class="drop-img">
+                <img src="../imgs/Merch/Drop2/Hoodies/Sunset.JPG" alt="Charlie Hoodie Front">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── COLLECTIVE ── -->
+<section id="collective" style="border-bottom:none;">
+    <div class="section-head" style="justify-content:center;">
+        <h2 class="section-title">The Collective</h2>
+    </div>
+    <div class="collective-inner">
+        <p class="collective-manifesto">We love our supporters.</p>
+        <a href="https://forms.gle/rMgB2YeTz7c9rMPb8" target="_blank" rel="noopener" class="btn-join">Join the Movement</a>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <p class="footer-copy">© 2026 Phantom Collective</p>
+    <ul class="footer-legal">
+        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        <li><a href="terms-of-service.html">Terms of Service</a></li>
+        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+    </ul>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+    // Detect touch device (iOS, Android)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    document.querySelectorAll('.reels-grid video').forEach(video => {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+    });
+
+    if (!isTouchDevice) {
+        document.querySelectorAll('.reels-grid .card').forEach(card => {
+            const video = card.querySelector('video');
+            if (!video) return;
+            card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+        });
+    } else {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                const video = card.querySelector('video');
+                const img = card.querySelector('img');
+                if (!video) return;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    video.play().catch(() => {});
+                    if (img) img.style.opacity = '0';
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                    if (img) img.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.reels-grid .card').forEach(card => videoObserver.observe(card));
+    }
+
+    // Graceful fallback if an image is missing
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', () => {
+            img.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>

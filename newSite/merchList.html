@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../imgs/favicon.png" type="image/png">
+
+<title>Shop - PHANTOM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --white: #ffffff;
+        --gray-light: #999;
+        --gray: #666;
+        --black: #000000;
+        --border: rgba(255,255,255,0.07);
+        --glow-sm: 0 0 12px rgba(255,255,255,0.12), 0 0 30px rgba(255,255,255,0.05);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--black);
+        color: var(--white);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV (from base template) ── */
+    nav {
+        position: sticky; top: 0; z-index: 100;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.2rem 3rem;
+        background: rgba(6,6,6,0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { text-decoration: none; display: flex; align-items: center; }
+    .nav-logo img {
+        height: 48px; width: auto;
+        filter: drop-shadow(var(--glow-sm)) brightness(1.1);
+        transition: filter 0.3s ease;
+    }
+    .nav-logo img:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)) brightness(1.3); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.78rem; letter-spacing: 0.18em;
+        color: var(--gray-light); text-decoration: none;
+        text-transform: uppercase; font-weight: 500;
+        transition: color 0.2s, text-shadow 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); text-shadow: 0 0 12px rgba(255,255,255,0.5); }
+    .nav-social { display: flex; gap: 1rem; align-items: center; }
+    .nav-social a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
+        color: var(--gray-light); text-decoration: none;
+        transition: color 0.2s, text-shadow 0.2s;
+        display: flex; align-items: center;
+    }
+    .nav-social a:hover { color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+    .cart-link svg {
+        width: 20px; height: 20px;
+        fill: none; stroke: currentColor; stroke-width: 1.8;
+        stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── SHOP HEADER ── */
+    .shop-header {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 1rem;
+    }
+
+    .shop-header-top {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .shop-label {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        margin-bottom: 0.4rem;
+        font-weight: 700;
+    }
+
+    .shop-title {
+        font-family: 'Oxanium', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        line-height: 0.95;
+        text-transform: uppercase;
+    }
+
+    .drop-status {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        line-height: 1.6;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        text-align: right;
+        font-weight: 700;
+    }
+
+    /* ── SECTION SHELL ── */
+    section { padding: 0 1.5rem 2.5rem; border-bottom: 1px solid var(--border); }
+
+    main.container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.5rem 2.5rem;
+    }
+
+    .section-block { margin-bottom: 0; }
+
+    .category-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+        padding: 0 0 1rem;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.75rem 1.25rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        background: var(--black);
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .gallery-img-wrap {
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        background: var(--black);
+        position: relative;
+    }
+
+    .gallery-item.apparel img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item.apparel:hover img { transform: scale(1.02); }
+
+    .gallery-item.sticker .gallery-img-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: var(--black);
+    }
+
+    .gallery-item.sticker img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item.sticker:hover img { transform: scale(1.04); }
+
+    .gallery-info {
+        padding: 0.65rem 0.5rem 1.15rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        background: var(--black);
+    }
+
+    .gallery-info-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .gallery-item h3 {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        line-height: 1.2;
+        letter-spacing: 0.07em;
+        color: var(--white);
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .gallery-price {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.04em;
+        color: var(--white);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .gallery-item-sub {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        color: var(--gray-light);
+        text-transform: uppercase;
+    }
+
+    /* ── FOOTER (from base template) ── */
+    footer {
+        background: #040404;
+        border-top: 1px solid var(--border);
+        padding: 2rem 3rem; text-align: center;
+    }
+    .footer-copy {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.6rem; letter-spacing: 0.15em;
+        color: var(--gray); text-transform: uppercase; font-weight: 300;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+        .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+    }
+
+    @media (max-width: 640px) {
+        .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .shop-header-top { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .drop-status { text-align: left; }
+    }
+</style>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6TRGC1VWSQ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-6TRGC1VWSQ');
+</script>
+
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <a href="../index.html" class="nav-logo"><img src="../imgs/frontembossed.png" alt="PHANTOM"></a>
+    <ul class="nav-links">
+        <li><a href="../index.html#reels">Media</a></li>
+        <li><a href="../index.html#drop">Shop</a></li>
+        <li><a href="../index.html#collective">Contact</a></li>
+    </ul>
+    <div class="nav-social">
+        <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
+        <a href="#" target="_blank" rel="noopener">TK</a>
+        <a href="#" target="_blank" rel="noopener">YT</a>
+    </div>
+</nav>
+
+<!-- ── SHOP HEADER ── -->
+<div class="shop-header">
+    <div class="shop-header-top">
+        <div>
+            <p class="shop-label">PHANTOM / 2026</p>
+            <h1 class="shop-title">SHOP</h1>
+        </div>
+        <div class="drop-status">
+            DROP 02<br>
+            AVAILABLE NOW
+        </div>
+    </div>
+</div>
+
+<!-- ── PRODUCTS ── -->
+<main class="container">
+    <section class="section-block" id="apparel" style="border-bottom: none;">
+        <div class="category-label">
+            <span>Drop 02</span>
+            <span>07 Items</span>
+        </div>
+
+        <div class="gallery">
+
+            <!-- HOODIE -->
+            <a href="../merch/hoodie.html" class="gallery-item apparel">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/Drop2/Hoodies/FrontTransparent.PNG" alt="PHANTOM Hoodie 02">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>PHANTOM Hoodie 02</h3>
+                        <span class="gallery-price">$60</span>
+                    </div>
+                    <div class="gallery-item-sub">Black</div>
+                </div>
+            </a>
+
+            <!-- BUBBLE -->
+            <a href="../merch/tshirt.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/Drop2/Tshirt/FrontTransparent.png" alt="Phantom Tshirt">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>Star Tee</h3>
+                        <span class="gallery-price">$25</span>
+                    </div>
+                    <div class="gallery-item-sub">White</div>
+                </div>
+            </a>
+
+            <!-- OG SHOOTING STAR -->
+            <a href="ogshootingStar.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/Drop2/Sticker/Barcode.png" alt="PHANTOM OG Shooting Star Sticker">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>OG Shooting Star</h3>
+                        <span class="gallery-price">$XX</span>
+                    </div>
+                    <div class="gallery-item-sub">Sticker / Drop 02</div>
+                </div>
+            </a>
+
+            <!-- SPIKY -->
+            <a href="spiky.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/spiky.png" alt="PHANTOM Spiky Sticker">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>Spiky</h3>
+                        <span class="gallery-price">$XX</span>
+                    </div>
+                    <div class="gallery-item-sub">Sticker / Drop 02</div>
+                </div>
+            </a>
+
+            <!-- STAR -->
+            <a href="star.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/star.png" alt="PHANTOM Star Icon Sticker">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>Star Icon</h3>
+                        <span class="gallery-price">$XX</span>
+                    </div>
+                    <div class="gallery-item-sub">Sticker / Drop 02</div>
+                </div>
+            </a>
+
+            <!-- OG REIMAGINED -->
+            <a href="ogv2.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/ogv2.png" alt="PHANTOM OG Reimagined Sticker">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>OG Reimagined</h3>
+                        <span class="gallery-price">$XX</span>
+                    </div>
+                    <div class="gallery-item-sub">Sticker / Drop 02</div>
+                </div>
+            </a>
+
+            <!-- LARPING -->
+            <a href="larp.html" class="gallery-item sticker">
+                <div class="gallery-img-wrap">
+                    <img src="../imgs/Merch/larp.png" alt="PHANTOM Larping Sticker">
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-info-row">
+                        <h3>Larping</h3>
+                        <span class="gallery-price">$XX</span>
+                    </div>
+                    <div class="gallery-item-sub">Sticker / Drop 02</div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <p class="footer-copy">© 2026 Phantom Collective</p>
+</footer>
+
+<script src="../cart.js"></script>
+<script>
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', () => {
+            img.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
