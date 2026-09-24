@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" href="../imgs/favicon.png" type="image/png">
-<title>Shooting Star Tee - PHANTOM</title>
+<title>Sigil - PHANTOM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -90,11 +90,11 @@
     /* PRODUCT LAYOUT */
     .product-content {
         display: flex; gap: 4rem;
-        flex-wrap: wrap; align-items: flex-start; justify-content: center;
+        flex-wrap: wrap; align-items: center; justify-content: center;
     }
 
     /* CAROUSEL */
-    .carousel-wrap { position: relative; width: 100%; max-width: 280px; }
+    .carousel-wrap { position: relative; width: 100%; max-width: 420px; }
 
     .product-image {
         background: var(--dark);
@@ -116,30 +116,22 @@
 
     .slide {
         min-width: 100%;
-        aspect-ratio: 2 / 3;
         max-height: 55vh;
         padding: 0;
         display: flex; align-items: center; justify-content: center;
+        overflow: hidden;
     }
 
     .slide img {
         display: block;
-        width: 100%; height: 100%;
-        object-fit: cover;
+        width: 100%; height: auto;
+        max-height: 55vh;
+        object-fit: contain;
         object-position: center;
         transition: filter 0.35s ease;
+        /* trims a thin edge artifact along the bottom of the source file without cropping the artwork */
+        clip-path: inset(0 0 1.5% 0);
     }
-
-    /* main product shot: show the whole transparent PNG instead of cropping it */
-    .slide:first-child img {
-        object-fit: contain;
-    }
-
-    /* life shots: no filter change on hover only */
-    .slide.life-shot img {
-        filter: brightness(0.85) grayscale(0.1) !important;
-    }
-    .slide.life-shot:hover img { filter: brightness(1) grayscale(0) !important; }
 
     /* black variant overrides for product slide only */
     .product-image.variant-black .slide:first-child { background: #e8e8e8; }
@@ -195,90 +187,14 @@
         font-size: 1.8rem; font-weight: 800;
         letter-spacing: 0.04em; margin-bottom: 1.25rem;
         text-shadow: var(--glow-sm);
+        text-align: center;
     }
     .product-description {
         font-family: 'Oxanium', sans-serif;
         font-size: 0.85rem; letter-spacing: 0.08em;
         color: var(--gray-light); text-transform: uppercase;
         line-height: 2; margin-bottom: 1.75rem; font-weight: 400;
-    }
-
-    /* COLOR SELECTOR */
-    .color-selector { margin-bottom: 1.75rem; }
-    .color-label {
-        font-family: 'Oxanium', sans-serif;
-        font-size: 0.62rem; letter-spacing: 0.3em;
-        color: var(--gray-light); text-transform: uppercase;
-        font-weight: 400; margin-bottom: 0.75rem;
-        display: flex; align-items: center; gap: 0.5rem;
-    }
-    .color-label span { color: var(--white); letter-spacing: 0.15em; }
-    .color-swatches { display: flex; gap: 0.6rem; }
-    .swatch {
-        width: 36px; height: 36px; border-radius: 2px;
-        border: 1.5px solid rgba(255,255,255,0.15);
-        cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-    }
-    .swatch:hover { transform: scale(1.08); border-color: rgba(255,255,255,0.4); }
-    .swatch.active { border-color: var(--white); box-shadow: 0 0 0 2px rgba(255,255,255,0.15), var(--glow-sm); }
-    .swatch-white { background: #ffffff; }
-    .swatch-black { background: #111111; outline: 1px solid rgba(255,255,255,0.12); }
-
-    /* SIZE SELECTOR */
-    .size-selector { margin-bottom: 1.75rem; }
-    .size-swatches { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-    .size-btn {
-        min-width: 44px; height: 36px; padding: 0 0.75rem;
-        border-radius: 2px;
-        border: 1.5px solid rgba(255,255,255,0.15);
-        background: transparent; color: var(--gray-light);
-        font-family: 'Oxanium', sans-serif;
-        font-size: 0.72rem; letter-spacing: 0.08em; font-weight: 600;
-        cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
-    }
-    .size-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
-    .size-btn.active {
-        border-color: var(--white); color: var(--white);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.15), var(--glow-sm);
-    }
-
-    .size-btn:disabled {
-        opacity: 0.25;
-        cursor: not-allowed;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .size-btn:disabled::after {
-        content: "";
-        position: absolute;
-        width: 140%;
-        height: 1.5px;
-        background: rgba(255, 255, 255, 0.55);
-        top: 50%;
-        left: -20%;
-        transform: rotate(-45deg);
-        pointer-events: none;
-    }
-
-    .inventory-status {
-    margin-top: 0.65rem;
-    min-height: 16px;
-    font-family: 'Oxanium', sans-serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.15em;
-    color: var(--gray-light);
-    text-transform: uppercase;
-    }
-
-    .inventory-status.low {
-        color: var(--white);
-    }
-
-    .inventory-status.sold-out {
-        color: var(--gray);
+        text-align: center;
     }
 
     /* BUY BUTTON */
@@ -345,7 +261,7 @@
 
 <!-- PRODUCT -->
 <section class="container">
-    <h2 class="section-title">Shooting Star Tee</h2>
+    <h2 class="section-title">Sigil</h2>
 
     <div class="product-content">
 
@@ -353,24 +269,21 @@
         <div class="carousel-wrap">
             <div class="product-image" id="productImageWrap">
 
-                <button class="carousel-btn prev" id="prevBtn" aria-label="Previous">
+                <button class="carousel-btn prev" id="prevBtn" aria-label="Previous" style="display:none;">
                     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
-                <button class="carousel-btn next" id="nextBtn" aria-label="Next">
+                <button class="carousel-btn next" id="nextBtn" aria-label="Next" style="display:none;">
                     <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
 
                 <div class="slides" id="slides">
                     <div class="slide">
-                        <img src="../imgs/Merch/Drop2/Tshirt/FrontTransparent.png" alt="Shooting Star Tee">
-                    </div>
-                    <div class="slide">
-                        <img src="../imgs/Merch/Drop2/Tshirt/tshirt.gif" alt="T-shirt animation">
+                        <img src="../imgs/Merch/Drop2/Sticker/sigil.png" alt="Sigil">
                     </div>
                 </div>
 
             </div>
-            <div class="carousel-dots" id="dots"></div>
+            <div class="carousel-dots" id="dots" style="display:none;"></div>
         </div>
 
         <!-- DETAILS -->
@@ -378,17 +291,8 @@
 
             <p class="product-price" id="productPrice">$25.00</p>
 
-            <div class="size-selector">
-                <div class="color-label">
-                    Size: <span id="sizeLabel">M</span>
-                </div>
-
-                <div class="size-swatches" id="sizeSwatches"></div>
-
-                <div class="inventory-status" id="inventoryStatus">
-                    Checking availability...
-                </div>
-            </div>
+            <p class="product-description">
+            </p>
 
             <div class="product-buttons" style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
                 <button class="btn-shop" id="addToCartBtn" style="cursor:pointer;width:220px;background:#fff;color:#000;border-color:#fff;">Add to Cart</button>
@@ -408,20 +312,17 @@
 <script>
     const variants = {
         white: {
-            S:  { price: 25.00, catalogId: 'APOJJXU5CZPE2GVFDKEYAT4F' },
-            M:  { price: 25.00, catalogId: 'IOXXZI4YJADKL6T5CJSWA6LI' },
-            L:  { price: 25.00, catalogId: 'QBDYUNO7JFGISFDUVVBORPSW' },
-            XL: { price: 25.00, catalogId: 'KKSJAUHQUAO7I2TIKJT6OFCA' }
+            OS: { price: 25.00, catalogId: 'C3ZLKDPSJBSZ7U42EJ4HFZTZ' }
         }
     };
 
-    const PRODUCT_NAME = 'Shooting Star Tee';
-    const PRODUCT_IMG  = '../imgs/Merch/Drop2/Tshirt/FrontTransparent.png';
+    const PRODUCT_NAME = 'Sigil';
+    const PRODUCT_IMG  = '../imgs/Merch/Drop2/Sticker/sigil.png';
 
     const API_BASE = 'https://checkout.phantomnwa.shop';
 
     let currentColor = 'white';
-    let currentSize  = 'M';
+    let currentSize  = 'OS';
 
     let inventory = {};
     let inventoryLoaded = false;
@@ -456,24 +357,13 @@
     prevBtn.addEventListener('click', () => goTo(current - 1));
     nextBtn.addEventListener('click', () => goTo(current + 1));
 
-    let touchStartX = 0;
-    slidesEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    slidesEl.addEventListener('touchend', e => {
-        const diff = touchStartX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 40) { goTo(diff > 0 ? current + 1 : current - 1); }
-    });
-
     goTo(0);
 
     const imageWrap = document.getElementById('productImageWrap');
     const priceEl = document.getElementById('productPrice');
     const buyBtn = document.getElementById('buyBtn');
-    const colorName = document.getElementById('colorName');
-    const swatches = document.querySelectorAll('.swatch');
     const addBtn = document.getElementById('addToCartBtn');
-    const sizeSwatches = document.getElementById('sizeSwatches');
-    const sizeLabel = document.getElementById('sizeLabel');
-    const inventoryStatus = document.getElementById('inventoryStatus');
+    const inventoryStatus = { textContent: '', className: '' };
 
     function currentVariant() {
         return (variants[currentColor] && variants[currentColor][currentSize]);
@@ -487,8 +377,6 @@
     }
 
     async function loadInventory() {
-        inventoryStatus.textContent = 'Checking availability...';
-        inventoryStatus.className = 'inventory-status';
         try {
             const ids = [];
             Object.values(variants[currentColor]).forEach(variant => {
@@ -499,84 +387,13 @@
             const data = await response.json();
             inventory = data.inventory || {};
             inventoryLoaded = true;
-            renderSizeButtons();
             updateCurrentSelection();
         }
         catch (error) {
             console.error('Inventory error:', error);
             inventoryLoaded = false;
-            inventoryStatus.textContent = 'Availability unavailable';
-            inventoryStatus.className = 'inventory-status';
-            renderSizeButtons(false);
         }
     }
-
-    function renderSizeButtons(useInventory = true) {
-        const sizes = Object.keys(variants[currentColor] || {});
-        sizeSwatches.innerHTML = '';
-        sizes.forEach(size => {
-            const variant = variants[currentColor][size];
-            const stock = useInventory ? getStock(variant.catalogId) : null;
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'size-btn' + (size === currentSize ? ' active' : '');
-            btn.textContent = size;
-            if (useInventory && stock <= 0) {
-                btn.disabled = true;
-                btn.title = `${size} — Sold Out`;
-            } else {
-                btn.addEventListener('click', () => selectSize(size));
-            }
-            sizeSwatches.appendChild(btn);
-        });
-
-        if (useInventory) {
-            const current = variants[currentColor][currentSize];
-            const currentStock = current ? getStock(current.catalogId) : 0;
-            if (currentStock <= 0) {
-                const firstAvailable = sizes.find(size => getStock(variants[currentColor][size].catalogId) > 0);
-                if (firstAvailable) { currentSize = firstAvailable; }
-            }
-        }
-
-        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === currentSize);
-        });
-
-        if (sizeLabel) { sizeLabel.textContent = currentSize; }
-    }
-
-    function selectSize(size) {
-        if (!variants[currentColor] || !variants[currentColor][size]) { return; }
-        const variant = variants[currentColor][size];
-        if (inventoryLoaded) {
-            const stock = getStock(variant.catalogId);
-            if (stock <= 0) { return; }
-        }
-        currentSize = size;
-        if (sizeLabel) { sizeLabel.textContent = size; }
-        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === size);
-        });
-        refreshPriceAndButton();
-        updateInventoryMessage();
-    }
-
-    function selectVariant(color) {
-        if (!variants[color]) { return; }
-        currentColor = color;
-        const sizesForColor = Object.keys(variants[color]);
-        if (!sizesForColor.includes(currentSize)) { currentSize = sizesForColor[0]; }
-        imageWrap.classList.toggle('variant-black', color === 'black');
-        if (colorName) { colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1); }
-        swatches.forEach(s => { s.classList.toggle('active', s.dataset.color === color); });
-        renderSizeButtons();
-        if (sizeLabel) { sizeLabel.textContent = currentSize; }
-        refreshPriceAndButton();
-        loadInventory();
-    }
-
-    swatches.forEach(s => { s.addEventListener('click', () => selectVariant(s.dataset.color)); });
 
     function refreshPriceAndButton() {
         const v = currentVariant();
@@ -586,27 +403,15 @@
     }
 
     function updateInventoryMessage() {
-        if (!inventoryLoaded) {
-            inventoryStatus.textContent = 'Availability unavailable';
-            inventoryStatus.className = 'inventory-status';
-            return;
-        }
+        if (!inventoryLoaded) { return; }
         const v = currentVariant();
         if (!v) { return; }
         const stock = getStock(v.catalogId);
         if (stock <= 0) {
-            inventoryStatus.textContent = 'Sold out';
-            inventoryStatus.className = 'inventory-status sold-out';
             addBtn.disabled = true;
-            return;
-        }
-        addBtn.disabled = false;
-        if (stock <= 5) {
-            inventoryStatus.textContent = `Only ${stock} left`;
-            inventoryStatus.className = 'inventory-status low';
+            addBtn.textContent = 'Sold Out';
         } else {
-            inventoryStatus.textContent = 'In stock';
-            inventoryStatus.className = 'inventory-status';
+            addBtn.disabled = false;
         }
     }
 
@@ -617,7 +422,7 @@
 
     addBtn.addEventListener('click', async () => {
         const v = currentVariant();
-        if (!v) { alert('Please select a size.'); return; }
+        if (!v) { return; }
         addBtn.disabled = true;
         addBtn.textContent = 'Checking...';
         try {
@@ -625,7 +430,7 @@
             const freshVariant = currentVariant();
             const stock = getStock(freshVariant.catalogId);
             if (stock <= 0) {
-                alert(`Size ${currentSize} is sold out.`);
+                alert('Sold out.');
                 addBtn.textContent = 'Sold Out';
                 updateInventoryMessage();
                 return;
@@ -655,14 +460,14 @@
     buyBtn.addEventListener('click', async event => {
         event.preventDefault();
         const v = currentVariant();
-        if (!v) { alert('Please select a size.'); return; }
+        if (!v) { return; }
         buyBtn.textContent = 'Checking...';
         try {
             await loadInventory();
             const freshVariant = currentVariant();
             const stock = getStock(freshVariant.catalogId);
             if (stock <= 0) {
-                alert(`Size ${currentSize} is sold out.`);
+                alert('Sold out.');
                 buyBtn.textContent = 'Buy Now';
                 return;
             }
@@ -688,7 +493,6 @@
     });
 
     async function initializeProduct() {
-        renderSizeButtons(false);
         refreshPriceAndButton();
         await loadInventory();
     }

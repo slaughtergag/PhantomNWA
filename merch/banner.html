@@ -90,7 +90,7 @@
     /* PRODUCT LAYOUT */
     .product-content {
         display: flex; gap: 4rem;
-        flex-wrap: wrap; align-items: flex-start; justify-content: center;
+        flex-wrap: wrap; align-items: center; justify-content: center;
     }
 
     /* CAROUSEL */
@@ -195,12 +195,14 @@
         font-size: 1.8rem; font-weight: 800;
         letter-spacing: 0.04em; margin-bottom: 1.25rem;
         text-shadow: var(--glow-sm);
+        text-align: center;
     }
     .product-description {
         font-family: 'Oxanium', sans-serif;
         font-size: 0.85rem; letter-spacing: 0.08em;
         color: var(--gray-light); text-transform: uppercase;
         line-height: 2; margin-bottom: 1.75rem; font-weight: 400;
+        text-align: center;
     }
 
     /* COLOR SELECTOR */
@@ -225,42 +227,28 @@
     .swatch-white { background: #ffffff; }
     .swatch-black { background: #111111; outline: 1px solid rgba(255,255,255,0.12); }
 
-    /* SIZE SELECTOR */
-    .size-selector { margin-bottom: 1.75rem; }
-    .size-swatches { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-    .size-btn {
-        min-width: 44px; height: 36px; padding: 0 0.75rem;
+    /* QUANTITY SELECTOR */
+    .qty-selector {
+        display: flex; align-items: center; justify-content: center;
+        gap: 1rem; margin-bottom: 1.75rem;
+    }
+    .qty-btn {
+        width: 40px; height: 40px;
         border-radius: 2px;
         border: 1.5px solid rgba(255,255,255,0.15);
-        background: transparent; color: var(--gray-light);
+        background: transparent; color: var(--white);
         font-family: 'Oxanium', sans-serif;
-        font-size: 0.72rem; letter-spacing: 0.08em; font-weight: 600;
+        font-size: 1.1rem; font-weight: 600;
         cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+        display: flex; align-items: center; justify-content: center;
+        transition: border-color 0.2s, background 0.2s, opacity 0.2s;
     }
-    .size-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
-    .size-btn.active {
-        border-color: var(--white); color: var(--white);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.15), var(--glow-sm);
-    }
-
-    .size-btn:disabled {
-        opacity: 0.25;
-        cursor: not-allowed;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .size-btn:disabled::after {
-        content: "";
-        position: absolute;
-        width: 140%;
-        height: 1.5px;
-        background: rgba(255, 255, 255, 0.55);
-        top: 50%;
-        left: -20%;
-        transform: rotate(-45deg);
-        pointer-events: none;
+    .qty-btn:hover:not(:disabled) { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.06); }
+    .qty-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    .qty-value {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 1.1rem; font-weight: 700;
+        min-width: 28px; text-align: center;
     }
 
     .inventory-status {
@@ -271,6 +259,7 @@
     letter-spacing: 0.15em;
     color: var(--gray-light);
     text-transform: uppercase;
+    text-align: center;
     }
 
     .inventory-status.low {
@@ -362,10 +351,10 @@
 
                 <div class="slides" id="slides">
                     <div class="slide">
-                        <img src="../imgs/Merch/Drop2/Tshirt/FrontTransparent.png" alt="Shooting Star Tee">
+                        <img src="../imgs/Merch/Drop2/Banner/FrontTransparent.png" alt="Shooting Star Tee">
                     </div>
                     <div class="slide">
-                        <img src="../imgs/Merch/Drop2/Tshirt/tshirt.gif" alt="T-shirt animation">
+                        <img src="../imgs/Merch/Drop2/Banner/banner.gif" alt="Banner animation">
                     </div>
                 </div>
 
@@ -378,17 +367,12 @@
 
             <p class="product-price" id="productPrice">$25.00</p>
 
-            <div class="size-selector">
-                <div class="color-label">
-                    Size: <span id="sizeLabel">M</span>
-                </div>
-
-                <div class="size-swatches" id="sizeSwatches"></div>
-
-                <div class="inventory-status" id="inventoryStatus">
-                    Checking availability...
-                </div>
+            <div class="qty-selector">
+                <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+                <span class="qty-value" id="qtyValue">1</span>
+                <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
             </div>
+            <div class="inventory-status" id="inventoryStatus">Checking availability...</div>
 
             <div class="product-buttons" style="display:flex;flex-direction:column;gap:0.6rem;align-items:center;">
                 <button class="btn-shop" id="addToCartBtn" style="cursor:pointer;width:220px;background:#fff;color:#000;border-color:#fff;">Add to Cart</button>
@@ -406,24 +390,15 @@
 
 <script src="../cart.js"></script>
 <script>
-    const variants = {
-        white: {
-            S:  { price: 25.00, catalogId: 'APOJJXU5CZPE2GVFDKEYAT4F' },
-            M:  { price: 25.00, catalogId: 'IOXXZI4YJADKL6T5CJSWA6LI' },
-            L:  { price: 25.00, catalogId: 'QBDYUNO7JFGISFDUVVBORPSW' },
-            XL: { price: 25.00, catalogId: 'KKSJAUHQUAO7I2TIKJT6OFCA' }
-        }
-    };
+    const PRODUCT_VARIANT = { price: 25.00, catalogId: 'REPLACE_WITH_BANNER_CATALOG_ID' };
 
     const PRODUCT_NAME = 'Shooting Star Tee';
     const PRODUCT_IMG  = '../imgs/Merch/Drop2/Tshirt/FrontTransparent.png';
 
     const API_BASE = 'https://checkout.phantomnwa.shop';
 
-    let currentColor = 'white';
-    let currentSize  = 'M';
-
-    let inventory = {};
+    let quantity = 1;
+    let stock = null;
     let inventoryLoaded = false;
 
     const slidesEl = document.getElementById('slides');
@@ -465,124 +440,63 @@
 
     goTo(0);
 
-    const imageWrap = document.getElementById('productImageWrap');
     const priceEl = document.getElementById('productPrice');
     const buyBtn = document.getElementById('buyBtn');
-    const colorName = document.getElementById('colorName');
-    const swatches = document.querySelectorAll('.swatch');
     const addBtn = document.getElementById('addToCartBtn');
-    const sizeSwatches = document.getElementById('sizeSwatches');
-    const sizeLabel = document.getElementById('sizeLabel');
     const inventoryStatus = document.getElementById('inventoryStatus');
-
-    function currentVariant() {
-        return (variants[currentColor] && variants[currentColor][currentSize]);
-    }
+    const qtyValueEl = document.getElementById('qtyValue');
+    const qtyMinusBtn = document.getElementById('qtyMinus');
+    const qtyPlusBtn = document.getElementById('qtyPlus');
 
     function getStock(catalogId) {
-        if (!inventory[catalogId]) { return 0; }
-        const item = inventory[catalogId];
-        if (item.state && item.state !== 'IN_STOCK') { return 0; }
-        return Math.max(0, Number(item.quantity || 0));
+        // placeholder; replaced by live value once inventory loads
+        return stock === null ? 999 : stock;
     }
 
     async function loadInventory() {
         inventoryStatus.textContent = 'Checking availability...';
         inventoryStatus.className = 'inventory-status';
         try {
-            const ids = [];
-            Object.values(variants[currentColor]).forEach(variant => {
-                if (variant.catalogId) { ids.push(variant.catalogId); }
-            });
-            const response = await fetch(`${API_BASE}/inventory?ids=${encodeURIComponent(ids.join(','))}`, { method: 'GET', cache: 'no-store' });
+            const response = await fetch(`${API_BASE}/inventory?ids=${encodeURIComponent(PRODUCT_VARIANT.catalogId)}`, { method: 'GET', cache: 'no-store' });
             if (!response.ok) { throw new Error(`Inventory request failed: ${response.status}`); }
             const data = await response.json();
-            inventory = data.inventory || {};
+            const item = (data.inventory || {})[PRODUCT_VARIANT.catalogId];
+            if (item && (!item.state || item.state === 'IN_STOCK')) {
+                stock = Math.max(0, Number(item.quantity || 0));
+            } else {
+                stock = 0;
+            }
             inventoryLoaded = true;
-            renderSizeButtons();
-            updateCurrentSelection();
+            if (quantity > stock && stock > 0) { quantity = stock; }
+            updateQtyDisplay();
+            updateInventoryMessage();
         }
         catch (error) {
             console.error('Inventory error:', error);
             inventoryLoaded = false;
             inventoryStatus.textContent = 'Availability unavailable';
             inventoryStatus.className = 'inventory-status';
-            renderSizeButtons(false);
         }
     }
 
-    function renderSizeButtons(useInventory = true) {
-        const sizes = Object.keys(variants[currentColor] || {});
-        sizeSwatches.innerHTML = '';
-        sizes.forEach(size => {
-            const variant = variants[currentColor][size];
-            const stock = useInventory ? getStock(variant.catalogId) : null;
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'size-btn' + (size === currentSize ? ' active' : '');
-            btn.textContent = size;
-            if (useInventory && stock <= 0) {
-                btn.disabled = true;
-                btn.title = `${size} — Sold Out`;
-            } else {
-                btn.addEventListener('click', () => selectSize(size));
-            }
-            sizeSwatches.appendChild(btn);
-        });
-
-        if (useInventory) {
-            const current = variants[currentColor][currentSize];
-            const currentStock = current ? getStock(current.catalogId) : 0;
-            if (currentStock <= 0) {
-                const firstAvailable = sizes.find(size => getStock(variants[currentColor][size].catalogId) > 0);
-                if (firstAvailable) { currentSize = firstAvailable; }
-            }
-        }
-
-        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === currentSize);
-        });
-
-        if (sizeLabel) { sizeLabel.textContent = currentSize; }
+    function updateQtyDisplay() {
+        qtyValueEl.textContent = quantity;
+        qtyMinusBtn.disabled = quantity <= 1;
+        qtyPlusBtn.disabled = inventoryLoaded && stock !== null && quantity >= stock;
     }
 
-    function selectSize(size) {
-        if (!variants[currentColor] || !variants[currentColor][size]) { return; }
-        const variant = variants[currentColor][size];
-        if (inventoryLoaded) {
-            const stock = getStock(variant.catalogId);
-            if (stock <= 0) { return; }
-        }
-        currentSize = size;
-        if (sizeLabel) { sizeLabel.textContent = size; }
-        sizeSwatches.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === size);
-        });
-        refreshPriceAndButton();
-        updateInventoryMessage();
-    }
+    qtyMinusBtn.addEventListener('click', () => {
+        if (quantity > 1) { quantity -= 1; updateQtyDisplay(); }
+    });
 
-    function selectVariant(color) {
-        if (!variants[color]) { return; }
-        currentColor = color;
-        const sizesForColor = Object.keys(variants[color]);
-        if (!sizesForColor.includes(currentSize)) { currentSize = sizesForColor[0]; }
-        imageWrap.classList.toggle('variant-black', color === 'black');
-        if (colorName) { colorName.textContent = color.charAt(0).toUpperCase() + color.slice(1); }
-        swatches.forEach(s => { s.classList.toggle('active', s.dataset.color === color); });
-        renderSizeButtons();
-        if (sizeLabel) { sizeLabel.textContent = currentSize; }
-        refreshPriceAndButton();
-        loadInventory();
-    }
+    qtyPlusBtn.addEventListener('click', () => {
+        if (inventoryLoaded && stock !== null && quantity >= stock) { return; }
+        quantity += 1;
+        updateQtyDisplay();
+    });
 
-    swatches.forEach(s => { s.addEventListener('click', () => selectVariant(s.dataset.color)); });
-
-    function refreshPriceAndButton() {
-        const v = currentVariant();
-        if (!v) { return; }
-        priceEl.textContent = '$' + v.price.toFixed(2);
-        if (buyBtn) { buyBtn.href = '#'; }
+    function refreshPrice() {
+        priceEl.textContent = '$' + PRODUCT_VARIANT.price.toFixed(2);
     }
 
     function updateInventoryMessage() {
@@ -591,9 +505,6 @@
             inventoryStatus.className = 'inventory-status';
             return;
         }
-        const v = currentVariant();
-        if (!v) { return; }
-        const stock = getStock(v.catalogId);
         if (stock <= 0) {
             inventoryStatus.textContent = 'Sold out';
             inventoryStatus.className = 'inventory-status sold-out';
@@ -610,35 +521,29 @@
         }
     }
 
-    function updateCurrentSelection() {
-        refreshPriceAndButton();
-        updateInventoryMessage();
-    }
-
     addBtn.addEventListener('click', async () => {
-        const v = currentVariant();
-        if (!v) { alert('Please select a size.'); return; }
         addBtn.disabled = true;
         addBtn.textContent = 'Checking...';
         try {
             await loadInventory();
-            const freshVariant = currentVariant();
-            const stock = getStock(freshVariant.catalogId);
             if (stock <= 0) {
-                alert(`Size ${currentSize} is sold out.`);
+                alert('Sold out.');
                 addBtn.textContent = 'Sold Out';
                 updateInventoryMessage();
                 return;
             }
-            window.PhantomCart.addItem({
-                id: freshVariant.catalogId,
-                name: PRODUCT_NAME,
-                color: currentColor,
-                size: currentSize,
-                price: freshVariant.price,
-                image: PRODUCT_IMG,
-                noFilter: true
-            });
+            const qtyToAdd = Math.min(quantity, stock);
+            for (let i = 0; i < qtyToAdd; i++) {
+                window.PhantomCart.addItem({
+                    id: PRODUCT_VARIANT.catalogId,
+                    name: PRODUCT_NAME,
+                    color: 'white',
+                    size: '',
+                    price: PRODUCT_VARIANT.price,
+                    image: PRODUCT_IMG,
+                    noFilter: true
+                });
+            }
             addBtn.textContent = 'Added ✓';
             setTimeout(() => {
                 addBtn.textContent = 'Add to Cart';
@@ -654,24 +559,21 @@
 
     buyBtn.addEventListener('click', async event => {
         event.preventDefault();
-        const v = currentVariant();
-        if (!v) { alert('Please select a size.'); return; }
         buyBtn.textContent = 'Checking...';
         try {
             await loadInventory();
-            const freshVariant = currentVariant();
-            const stock = getStock(freshVariant.catalogId);
             if (stock <= 0) {
-                alert(`Size ${currentSize} is sold out.`);
+                alert('Sold out.');
                 buyBtn.textContent = 'Buy Now';
                 return;
             }
+            const qtyToBuy = Math.min(quantity, stock);
             buyBtn.textContent = 'Loading...';
             const response = await fetch(`${API_BASE}/create-checkout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cart: [{ id: freshVariant.catalogId, qty: 1, color: currentColor, size: currentSize }]
+                    cart: [{ id: PRODUCT_VARIANT.catalogId, qty: qtyToBuy, color: 'white', size: '' }]
                 })
             });
             const data = await response.json();
@@ -688,8 +590,8 @@
     });
 
     async function initializeProduct() {
-        renderSizeButtons(false);
-        refreshPriceAndButton();
+        refreshPrice();
+        updateQtyDisplay();
         await loadInventory();
     }
 
