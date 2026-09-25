@@ -453,9 +453,16 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderCartPage);
-    } else {
-        renderCartPage();
-    }
+    document.addEventListener('DOMContentLoaded', renderCartPage);
+} else {
+    renderCartPage();
+}
+
+
+// ── Refresh cart when Safari restores page from Back/Forward cache ───────
+window.addEventListener('pageshow', function () {
+    renderDrawer();
+    renderCartPage();
+});
 
 })();
