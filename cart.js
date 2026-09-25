@@ -1237,6 +1237,12 @@
 
     function refreshCartUI() {
 
+        // Re-inject the cart icon/badge in case this page instance's DOM
+        // was restored from bfcache without a fresh script re-run, or in
+        // case the icon never mounted the first time (e.g. nav wasn't
+        // ready yet).
+        injectCartIcon();
+
         renderDrawer();
         renderCartPage();
 
@@ -1275,12 +1281,29 @@
         refreshCartUI
     );
 
-    // ── Safari back/forward cache ─────────────────────────────────────────────
+    // ── Safari / bfcache back-forward restore ─────────────────────────────────
+    // Fires when a page is restored from the browser's back/forward cache
+    // (e.g. user hits the browser Back button). The page's JS state is
+    // frozen and thawed as-is, so localStorage-backed UI needs an explicit
+    // re-sync here — DOMContentLoaded will NOT fire again in this case.
 
     window.addEventListener(
         'pageshow',
         function () {
             refreshCartUI();
+        }
+    );
+
+    // ── Fallback: tab visibility change ───────────────────────────────────────
+    // Belt-and-suspenders for browsers/cases where pageshow's bfcache
+    // restore is missed. Re-syncs whenever the tab becomes visible again.
+
+    document.addEventListener(
+        'visibilitychange',
+        function () {
+            if (document.visibilityState === 'visible') {
+                refreshCartUI();
+            }
         }
     );
 
