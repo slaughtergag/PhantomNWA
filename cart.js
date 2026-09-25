@@ -453,30 +453,28 @@
     }
 
 function refreshCartUI() {
-    requestAnimationFrame(() => {
 
-        // Recreate drawer if Safari restored the page without it
-        if (!document.getElementById('ph-drawer')) {
-            const tmp = document.createElement('div');
-            tmp.innerHTML = buildDrawerHTML();
+    // Make sure drawer exists
+    if (!document.getElementById('ph-drawer')) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildDrawerHTML();
 
-            Array.from(tmp.children).forEach(el => {
-                document.body.appendChild(el);
-            });
+        Array.from(tmp.children).forEach(el => {
+            document.body.appendChild(el);
+        });
 
-            document.getElementById('ph-close').addEventListener('click', closeDrawer);
-            document.getElementById('ph-overlay').addEventListener('click', closeDrawer);
-        }
+        document.getElementById('ph-close').addEventListener('click', closeDrawer);
+        document.getElementById('ph-overlay').addEventListener('click', closeDrawer);
+    }
 
-        // Recreate cart button if necessary
-        if (!document.getElementById('ph-cart-btn')) {
-            injectCartIcon();
-        }
+    // Make sure cart button exists
+    if (!document.getElementById('ph-cart-btn')) {
+        injectCartIcon();
+    }
 
-        // Re-read localStorage and update everything
-        renderDrawer();
-        renderCartPage();
-    });
+    // Now render using current localStorage
+    renderDrawer();
+    renderCartPage();
 }
 
 if (document.readyState === 'loading') {
@@ -485,16 +483,14 @@ if (document.readyState === 'loading') {
     refreshCartUI();
 }
 
-// Safari / browser back-forward cache
-window.addEventListener('pageshow', function () {
-    refreshCartUI();
-});
+window.addEventListener('pageshow', refreshCartUI);
 
-// Also refresh when Safari makes the page visible again
 document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'visible') {
         refreshCartUI();
     }
 });
+
+
 
 })();
