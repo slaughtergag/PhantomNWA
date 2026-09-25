@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="imgs/favicon.png">
 <link rel="apple-touch-icon" href="imgs/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -15,205 +15,406 @@
         --white: #ffffff;
         --gray-light: #999;
         --gray: #666;
-        --dark: #0a0a0a;
-    }
-
-    html, body {
-        height: 100%;
+        --black: #000000;
+        --border: rgba(255,255,255,0.07);
+        --glow-sm: 0 0 12px rgba(255,255,255,0.12), 0 0 30px rgba(255,255,255,0.05);
     }
 
     body {
         font-family: 'DM Sans', sans-serif;
-        background: #050505;
+        background: var(--black);
         color: var(--white);
-        overflow: hidden;
     }
 
-    /* ── BACKDROP ── */
-    .bg {
-        position: fixed;
-        inset: 0;
-        background-image: url('imgs/background.png');
-        background-size: cover;
-        background-position: center;
-        opacity: 0.25;
-        filter: brightness(0.4) contrast(1.2) grayscale(0.3);
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .bg::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 75%);
-    }
+    /* ── INTRO ANIMATION ── */
+    body.intro-active { overflow: hidden; height: 100vh; }
 
-    /* Slow ambient light drifting behind the logo. Kept intentionally
-       small (not full-viewport) so the browser only has a small area to
-       repaint each frame — full-screen animated gradients are one of the
-       most common causes of janky animation. */
-    .ambient-light {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        width: 700px;
-        height: 700px;
-        margin: -350px 0 0 -350px;
+    #intro-overlay {
+        position: fixed; inset: 0; z-index: 9999;
         pointer-events: none;
-        background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 60%);
-        animation: drift 24s ease-in-out infinite;
-        transform: translateZ(0);
-        will-change: transform, opacity;
+    }
+    #intro-overlay .curtain {
+        position: absolute; top: 0; bottom: 0;
+        width: 50vw;
+        background: #000;
+        transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.85s ease;
+    }
+    #intro-overlay .curtain-left  { left: 0; transform-origin: left; }
+    #intro-overlay .curtain-right { right: 0; transform-origin: right; }
+
+    #intro-overlay.opening .curtain-left  { transform: translateX(-100%); opacity: 0; }
+    #intro-overlay.opening .curtain-right { transform: translateX(100%); opacity: 0; }
+
+    #intro-sticker {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(340px, 65vw);
+        z-index: 2;
+        opacity: 0;
+        animation: introGlitch 1.3s steps(1, end) forwards;
+    }
+    #intro-overlay.opening #intro-sticker {
+        transition: opacity 0.4s ease;
+        opacity: 0 !important;
     }
 
-    @keyframes drift {
-        0%, 100% { transform: translateZ(0) scale(1);    opacity: 0.7; }
-        50%      { transform: translateZ(0) scale(1.12); opacity: 1;   }
-    }
-
-    /* ── CENTER STAGE ── */
-    .stage {
-        position: relative;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2rem;
-        gap: 4.5rem;
-    }
-
-    /* Logo floats very gently, on its own GPU layer so it never has to
-       wait on anything else painting. */
-    .logo {
-        width: clamp(220px, 34vw, 420px);
-        height: auto;
-        filter: drop-shadow(0 0 30px rgba(255,255,255,0.15)) drop-shadow(0 0 80px rgba(255,255,255,0.06));
-        animation: float 9s ease-in-out infinite;
-        transform: translateZ(0);
-        will-change: transform;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateZ(0) translateY(0); }
-        50%      { transform: translateZ(0) translateY(-8px); }
-    }
-
-    /* ── COUNTDOWN ── */
-    .countdown {
-        display: flex;
-        gap: clamp(1.5rem, 5vw, 3.5rem);
-    }
-
-    .unit {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.4rem;
-    }
-
-    .unit-value {
-        font-family: 'Oxanium', sans-serif;
-        font-weight: 700;
-        font-size: clamp(1.8rem, 5vw, 3.2rem);
-        line-height: 1;
-        min-width: 1.6em;
-        color: var(--white);
-        text-shadow: 0 0 12px rgba(255,255,255,0.18);
-    }
-
-    .unit-label {
-        font-family: 'Oxanium', sans-serif;
-        font-size: 0.62rem;
-        letter-spacing: 0.3em;
-        color: var(--gray-light);
-        font-weight: 400;
-    }
-
-    .divider {
-        font-family: 'Oxanium', sans-serif;
-        font-weight: 300;
-        font-size: clamp(1.4rem, 4vw, 2.4rem);
-        color: rgba(255,255,255,0.15);
-        align-self: flex-start;
-        margin-top: 0.1em;
-    }
-
-    .until {
-        font-family: 'Oxanium', sans-serif;
-        font-size: 0.68rem;
-        letter-spacing: 0.35em;
-        color: var(--gray);
-        font-weight: 400;
+    @keyframes introGlitch {
+        0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.94); filter: none; }
+        4%   { opacity: 1; transform: translate(calc(-50% - 4px), calc(-50% + 2px)); filter: drop-shadow(3px 0 #ff2a4d) drop-shadow(-3px 0 #2ad8ff); }
+        8%   { transform: translate(calc(-50% + 3px), calc(-50% - 2px)); }
+        12%  { opacity: 0.35; }
+        16%  { opacity: 1; transform: translate(calc(-50% - 5px), -50%); filter: drop-shadow(-3px 0 #ff2a4d) drop-shadow(3px 0 #2ad8ff); }
+        20%  { transform: translate(-50%, calc(-50% + 3px)); }
+        26%  { opacity: 0.2; filter: none; }
+        30%  { opacity: 1; transform: translate(calc(-50% + 4px), calc(-50% - 3px)); filter: drop-shadow(2px 0 #ff2a4d) drop-shadow(-2px 0 #2ad8ff); }
+        36%  { transform: translate(-50%, -50%); filter: none; }
+        44%  { opacity: 0.5; }
+        50%  { opacity: 1; transform: translate(calc(-50% - 3px), calc(-50% + 2px)); filter: drop-shadow(-2px 0 #ff2a4d) drop-shadow(2px 0 #2ad8ff); }
+        58%  { transform: translate(-50%, -50%); filter: none; }
+        68%  { opacity: 0.65; }
+        76%  { opacity: 1; transform: translate(calc(-50% + 2px), -50%); filter: drop-shadow(1px 0 #ff2a4d) drop-shadow(-1px 0 #2ad8ff); }
+        84%  { transform: translate(-50%, -50%); filter: none; }
+        100% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .logo, .ambient-light { animation: none; }
+        #intro-sticker { animation: none; opacity: 1; }
+        #intro-overlay .curtain { transition: opacity 0.5s ease; }
+        #intro-overlay.opening .curtain-left,
+        #intro-overlay.opening .curtain-right { transform: none; }
     }
 
-    @media (max-width: 480px) {
-        .divider { display: none; }
-        .countdown { gap: 1.4rem; }
+    /* ── NAV (from base template) ── */
+    nav {
+        position: sticky; top: 0; z-index: 100;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.2rem 3rem;
+        background: rgba(6,6,6,0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { text-decoration: none; display: flex; align-items: center; }
+    .nav-logo img {
+        height: 48px; width: auto;
+        filter: drop-shadow(var(--glow-sm)) brightness(1.1);
+        transition: filter 0.3s ease;
+    }
+    .nav-logo img:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.5)) brightness(1.3); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.78rem; letter-spacing: 0.18em;
+        color: var(--gray-light); text-decoration: none;
+        text-transform: uppercase; font-weight: 500;
+        transition: color 0.2s, text-shadow 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); text-shadow: 0 0 12px rgba(255,255,255,0.5); }
+    .nav-social { display: flex; gap: 1rem; align-items: center; }
+    .nav-social a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
+        color: var(--gray-light); text-decoration: none;
+        transition: color 0.2s, text-shadow 0.2s;
+        display: flex; align-items: center;
+    }
+    .nav-social a:hover { color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+    .cart-link svg {
+        width: 20px; height: 20px;
+        fill: none; stroke: currentColor; stroke-width: 1.8;
+        stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── SECTION SHELL ── */
+    section { padding: 2.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        max-width: 1400px;
+        margin: 0 auto 1rem;
+    }
+
+    .section-title {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+    }
+
+    .section-link {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        font-weight: 700;
+    }
+
+    .section-link:hover { color: var(--white); }
+
+    /* ── DROP ── */
+    .drop-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .drop-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+    }
+
+    .drop-img {
+        aspect-ratio: 3 / 4;
+        background: #111;
+        overflow: hidden;
+    }
+
+    .drop-img img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .drop-name {
+        font-family: 'Oxanium', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        line-height: 0.95;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .btn-shop {
+        display: inline-block;
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border: 1.5px solid var(--white);
+    }
+
+    .btn-shop:hover { background: var(--white); color: var(--black); }
+
+    /* ── COLLECTIVE ── */
+    .collective-inner {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    .collective-manifesto {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-join {
+        display: inline-block;
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border: 1.5px solid var(--border);
+    }
+
+    .btn-join:hover { border-color: var(--white); }
+
+    /* ── FOOTER (base template style, with legal links kept) ── */
+    footer {
+        background: #040404;
+        border-top: 1px solid var(--border);
+        padding: 2rem 3rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .footer-copy {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.6rem; letter-spacing: 0.15em;
+        color: var(--gray); text-transform: uppercase; font-weight: 300;
+    }
+    .footer-legal {
+        display: flex;
+        gap: 1.25rem;
+        list-style: none;
+    }
+    .footer-legal a {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.1em;
+        color: var(--gray);
+        text-transform: uppercase;
+        transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+        .drop-inner { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+        nav { padding: 1rem 1.5rem; }
+        .nav-links { display: none; }
+    }
+
+    @media (max-width: 640px) {
+        footer { flex-direction: column; text-align: center; }
     }
 </style>
 </head>
 <body>
 
-<div class="bg"></div>
-<div class="ambient-light"></div>
-
-<div class="stage">
-    <img src="imgs/frontembossed.png" alt="PHANTOM" class="logo">
-
-    <div>
-        <div class="countdown" id="countdown">
-            <div class="unit"><span class="unit-value" id="days">00</span><span class="unit-label">Days</span></div>
-            <span class="divider">:</span>
-            <div class="unit"><span class="unit-value" id="hours">00</span><span class="unit-label">Hrs</span></div>
-            <span class="divider">:</span>
-            <div class="unit"><span class="unit-value" id="minutes">00</span><span class="unit-label">Min</span></div>
-            <span class="divider">:</span>
-            <div class="unit"><span class="unit-value" id="seconds">00</span><span class="unit-label">Sec</span></div>
-        </div>
-    </div>
+<div id="intro-overlay">
+    <div class="curtain curtain-left"></div>
+    <div class="curtain curtain-right"></div>
+    <img id="intro-sticker" src="imgs/Merch/Drop2/Sticker/sigil.png" alt="">
 </div>
 
 <script>
-    // Thursday, Sept 24, 2026, midnight Central Time (CDT, UTC-5 in September).
-    // Written as a fixed UTC instant so everyone worldwide hits zero at the
-    // same real-world moment, regardless of their own timezone.
-    const target = Date.UTC(2026, 8, 25, 4, 59, 0);
-
-    const daysEl    = document.getElementById('days');
-    const hoursEl   = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
-
-    function pad(n) { return String(n).padStart(2, '0'); }
-
-    function tick() {
-        const diff = target - Date.now();
-
-        if (diff <= 0) {
-            daysEl.textContent = hoursEl.textContent = minutesEl.textContent = secondsEl.textContent = '00';
-            document.querySelector('.until').textContent = "It's here.";
-            clearInterval(timer);
+    // Play the glitch/curtain intro once per browser session, only on this landing page.
+    (function () {
+        if (sessionStorage.getItem('phantom_intro_seen')) {
+            const overlay = document.getElementById('intro-overlay');
+            if (overlay) overlay.remove();
             return;
         }
+        sessionStorage.setItem('phantom_intro_seen', '1');
+        document.body.classList.add('intro-active');
 
-        const days    = Math.floor(diff / 86400000);
-        const hours   = Math.floor((diff % 86400000) / 3600000);
-        const minutes = Math.floor((diff % 3600000) / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
+        const overlay = document.getElementById('intro-overlay');
 
-        daysEl.textContent    = pad(days);
-        hoursEl.textContent   = pad(hours);
-        minutesEl.textContent = pad(minutes);
-        secondsEl.textContent = pad(seconds);
+        setTimeout(() => {
+            overlay.classList.add('opening');
+            document.body.classList.remove('intro-active');
+            setTimeout(() => overlay.remove(), 900);
+        }, 1300);
+    })();
+</script>
+
+<!-- ── NAV ── -->
+<nav>
+    <a href="index.html" class="nav-logo"><img src="imgs/frontembossed.png" alt="PHANTOM"></a>
+    <ul class="nav-links">
+        <li><a href="media.html">Media</a></li>
+        <li><a href="merchList.html">Shop</a></li>
+        <li><a href="index.html">Contact</a></li>
+    </ul>
+    <div class="nav-social">
+        <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
+        
+    </div>
+</nav>
+
+<!-- ── DROP ── -->
+<section id="drop">
+    <div class="section-head">
+        <h2 class="section-title"></h2>
+    </div>
+    <div class="drop-inner">
+        <div>
+            <h2 class="drop-name">Drop 02</h2>
+            <a href="merchList.html" class="btn-shop">Shop Now</a>
+        </div>
+        <div class="drop-images">
+            <div class="drop-img">
+                <img src="imgs/Merch/Drop2/Hoodies/Charlie Front.JPG" alt="Sunset Hoodie Front">
+            </div>
+            <div class="drop-img">
+                <img src="imgs/Merch/Drop2/Hoodies/Sunset.JPG" alt="Charlie Hoodie Front">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── COLLECTIVE ── -->
+<section id="collective" style="border-bottom:none;">
+    <div class="section-head" style="justify-content:center;">
+        <a href="media.html" target="_blank" rel="noopener" class="btn-join">The Collective</a>
+    </div>
+    <div class="collective-inner">
+        <a href="mailto:phantomnwahelp@gmail.com" target="_blank" rel="noopener" class="btn-join">Contact Us</a>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <p class="footer-copy">© 2026 Phantom Collective</p>
+    <ul class="footer-legal">
+        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        <li><a href="terms-of-service.html">Terms of Service</a></li>
+        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+    </ul>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+    // Detect touch device (iOS, Android)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    document.querySelectorAll('.reels-grid video').forEach(video => {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+    });
+
+    if (!isTouchDevice) {
+        document.querySelectorAll('.reels-grid .card').forEach(card => {
+            const video = card.querySelector('video');
+            if (!video) return;
+            card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+        });
+    } else {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target;
+                const video = card.querySelector('video');
+                const img = card.querySelector('img');
+                if (!video) return;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    video.play().catch(() => {});
+                    if (img) img.style.opacity = '0';
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                    if (img) img.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.reels-grid .card').forEach(card => videoObserver.observe(card));
     }
 
-    tick();
-    const timer = setInterval(tick, 1000);
+    // Graceful fallback if an image is missing
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', () => {
+            img.style.display = 'none';
+        });
+    });
 </script>
 
 </body>
