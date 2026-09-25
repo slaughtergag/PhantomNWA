@@ -452,15 +452,19 @@
             </div>`;
     }
 
-    if (document.readyState === 'loading') {
+if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderCartPage);
 } else {
     renderCartPage();
 }
 
+// Safari Back/Forward cache fix
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+        window.location.reload();
+        return;
+    }
 
-// ── Refresh cart when Safari restores page from Back/Forward cache ───────
-window.addEventListener('pageshow', function () {
     renderDrawer();
     renderCartPage();
 });
