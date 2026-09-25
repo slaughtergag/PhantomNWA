@@ -19,12 +19,12 @@
         --glow-sm: 0 0 12px rgba(255,255,255,0.12), 0 0 30px rgba(255,255,255,0.05);
         --glow-md: 0 0 20px rgba(255,255,255,0.18), 0 0 60px rgba(255,255,255,0.07);
     }
+    html, body { height: 100%; overflow: hidden; }
     html { scroll-behavior: smooth; }
     body {
         font-family: 'DM Sans', sans-serif;
         background: var(--dark);
         color: var(--white);
-        min-height: 100vh;
         display: flex;
         flex-direction: column;
         padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -32,17 +32,17 @@
 
     /* NAV */
     nav {
-        position: sticky; top: 0; z-index: 100;
+        flex-shrink: 0;
         display: flex; align-items: center; justify-content: space-between;
-        padding: 1.2rem 3rem;
-        padding-top: calc(1.2rem + env(safe-area-inset-top, 0px));
+        padding: 1rem 3rem;
+        padding-top: calc(1rem + env(safe-area-inset-top, 0px));
         background: rgba(6,6,6,0.95);
         backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border);
     }
     .nav-logo { text-decoration: none; display: flex; align-items: center; }
     .nav-logo img {
-        height: 48px; width: auto;
+        height: 40px; width: auto;
         filter: drop-shadow(var(--glow-sm)) brightness(1.1);
         transition: filter 0.3s ease;
     }
@@ -65,97 +65,131 @@
     }
     .nav-social a:hover { color: var(--white); text-shadow: 0 0 10px rgba(255,255,255,0.6); }
 
-    /* HEADER */
+    /* HEADER — compact, single block */
     .media-header {
+        flex-shrink: 0;
         max-width: 1300px;
         margin: 0 auto;
-        padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem) 1rem;
-        text-align: center;
+        width: 100%;
+        padding: clamp(0.9rem, 2.2vw, 1.5rem) clamp(1.5rem, 4vw, 3rem) 0.75rem;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
     }
+    .media-title-block { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
     .section-label {
         font-family: 'Oxanium', sans-serif;
-        font-size: 0.62rem; letter-spacing: 0.35em;
+        font-size: 0.6rem; letter-spacing: 0.3em;
         color: var(--gray-light); text-transform: uppercase;
-        margin-bottom: 0.5rem; font-weight: 400;
+        font-weight: 400;
     }
     .media-title {
         font-family: 'Oxanium', sans-serif; font-weight: 800;
-        font-size: clamp(2rem, 5vw, 3.2rem);
-        letter-spacing: 0.08em; line-height: 1.1;
-        color: var(--white); text-shadow: var(--glow-md);
-        text-transform: uppercase; margin-bottom: 1.75rem;
+        font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+        letter-spacing: 0.06em; line-height: 1;
+        color: var(--white); text-shadow: var(--glow-sm);
+        text-transform: uppercase;
     }
     .media-thanks {
-        max-width: 640px;
-        margin: 0 auto;
         font-family: 'DM Sans', sans-serif;
-        font-size: 0.95rem;
-        line-height: 1.85;
+        font-size: 0.78rem;
+        line-height: 1.5;
         color: var(--off-white);
         font-weight: 300;
+        max-width: 480px;
+        text-align: right;
     }
-    .media-thanks strong {
-        color: var(--white);
-        font-weight: 500;
-    }
+    .media-thanks strong { color: var(--white); font-weight: 500; }
 
-    /* GALLERY */
+    /* GALLERY — fills remaining height, scrolls sideways only */
     .gallery-wrap {
-        max-width: 1300px;
-        margin: 0 auto;
-        padding: 2.5rem clamp(1.5rem, 4vw, 3rem) 4rem;
         flex: 1;
-        width: 100%;
-    }
-    .photo-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-    }
-    .photo-card {
+        min-height: 0;
         position: relative;
-        aspect-ratio: 3 / 4;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+    .photo-scroll {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.5rem clamp(1.5rem, 4vw, 3rem);
+        scrollbar-width: none;
+    }
+    .photo-scroll::-webkit-scrollbar { display: none; }
+
+    .photo-card {
+        flex: 0 0 auto;
+        height: 100%;
+        width: clamp(200px, 26vw, 320px);
         border-radius: 3px;
-        background: var(--dark);
+        overflow: hidden;
+        position: relative;
+        scroll-snap-align: center;
         display: block;
     }
+    .photo-card.wide { width: clamp(320px, 42vw, 560px); }
+
     .photo-card img {
         width: 100%; height: 100%;
         object-fit: cover;
         display: block;
-        filter: brightness(0.9);
+        filter: brightness(0.88);
         transition: transform 0.4s ease, filter 0.3s ease;
     }
-    .photo-card:hover img {
-        transform: scale(1.04);
-        filter: brightness(1);
+    .photo-card:hover img { transform: scale(1.03); filter: brightness(1); }
+
+    /* scroll arrows */
+    .scroll-btn {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        z-index: 5;
+        width: 42px; height: 42px;
+        background: rgba(0,0,0,0.55);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: var(--white);
+        border-radius: 2px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(4px);
+        transition: background 0.2s, border-color 0.2s;
     }
-    .photo-card.wide { grid-column: span 2; }
+    .scroll-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+    .scroll-btn svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .scroll-btn.prev { left: 0.75rem; }
+    .scroll-btn.next { right: 0.75rem; }
 
     /* FOOTER */
     footer {
+        flex-shrink: 0;
         background: #040404;
         border-top: 1px solid var(--border);
-        padding: 2rem 3rem; text-align: center;
+        padding: 0.85rem 3rem;
+        padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+        text-align: center;
     }
     .footer-copy {
         font-family: 'DM Sans', sans-serif;
-        font-size: 0.6rem; letter-spacing: 0.15em;
+        font-size: 0.58rem; letter-spacing: 0.15em;
         color: var(--gray); text-transform: uppercase; font-weight: 300;
     }
 
     /* RESPONSIVE */
-    @media (max-width: 900px) {
-        .photo-grid { grid-template-columns: repeat(2, 1fr); }
-        .photo-card.wide { grid-column: span 2; }
-    }
-    @media (max-width: 640px) {
-        nav { padding: 1rem 1.5rem; padding-top: calc(1rem + env(safe-area-inset-top, 0px)); }
+    @media (max-width: 768px) {
+        nav { padding: 0.85rem 1.25rem; padding-top: calc(0.85rem + env(safe-area-inset-top, 0px)); }
         .nav-links { display: none; }
-        .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-        .photo-card.wide { grid-column: span 2; }
-        .media-thanks { font-size: 0.88rem; }
+        .media-header { flex-direction: column; align-items: flex-start; gap: 0.4rem; padding: 0.75rem 1.25rem 0.6rem; }
+        .media-thanks { text-align: left; max-width: 100%; font-size: 0.72rem; }
+        .scroll-btn { display: none; }
+        .photo-card { width: 68vw; }
+        .photo-card.wide { width: 82vw; }
     }
 </style>
 </head>
@@ -176,33 +210,52 @@
 
 <!-- HEADER -->
 <div class="media-header">
-    <p class="section-label">Phantom / Drop 02</p>
-    <h1 class="media-title">Behind The Drop</h1>
+    <div class="media-title-block">
+        <span class="section-label">Phantom / Drop 02</span>
+        <h1 class="media-title">Behind The Drop</h1>
+    </div>
     <p class="media-thanks">
-        Every shot here was taken by the people who wear this stuff — friends,
-        family, and the little corner of the internet that's been rocking with
-        us since day one. <strong>Thank you</strong> for showing up, showing out,
-        and trusting us with your time and your closets. This drop only exists
-        because you do. More to come.
+        Thank you for supporting Phantom... Here are some shots from the drop. Tag us on Instagram <strong>@phantomnwa</strong> to be featured.
     </p>
 </div>
 
 <!-- GALLERY -->
 <div class="gallery-wrap">
-    <div class="photo-grid">
-        <a class="photo-card wide" href="../imgs/Merch/Drop2/Hoodies/Sunset.JPG" target="_blank" rel="noopener">
+    <button class="scroll-btn prev" id="scrollPrev" aria-label="Scroll left">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+
+    <div class="photo-scroll" id="photoScroll">
+        <a class="photo-card wide" target="_blank" rel="noopener">
             <img src="../imgs/Merch/Drop2/Hoodies/Sunset.JPG" alt="Phantom hoodie at sunset">
         </a>
-        <a class="photo-card" href="../imgs/Merch/Drop2/Hoodies/NoelFront.JPG" target="_blank" rel="noopener">
+        <a class="photo-card wide" target="_blank" rel="noopener">
             <img src="../imgs/Merch/Drop2/Hoodies/NoelFront.JPG" alt="Phantom hoodie front shot">
         </a>
-        <a class="photo-card" href="../imgs/Merch/Drop2/Hoodies/GageBack.JPG" target="_blank" rel="noopener">
-            <img src="../imgs/Merch/Drop2/Hoodies/GageBack.JPG" alt="Phantom hoodie back shot">
+        <a class="photo-card wide" target="_blank" rel="noopener">
+            <img src="../imgs/Merch/Drop2/collective_banner.JPG" alt="Phantom hoodie on banner">
         </a>
-        <a class="photo-card wide" href="../imgs/Merch/Drop2/Hoodies/Charlie Front.JPG" target="_blank" rel="noopener">
+        <a class="photo-card wide" target="_blank" rel="noopener">
+            <img src="../imgs/Merch/Drop2/collective_noel.JPG" alt="Phantom hoodie on Noel">
+        </a>
+        <a class="photo-card wide" target="_blank" rel="noopener">
+            <img src="../imgs/Merch/Drop2/collective_charlie.JPG" alt="Phantom hoodie on Charlie">
+        </a>
+        <a class="photo-card wide" target="_blank" rel="noopener">
             <img src="../imgs/Merch/Drop2/Hoodies/Charlie Front.JPG" alt="Phantom hoodie on Charlie">
         </a>
+        <a class="photo-card wide" target="_blank" rel="noopener">
+            <img src="../imgs/Merch/Drop2/collective_gage.JPG" alt="Phantom hoodie back shot">
+        </a>
+        <a class="photo-card wide" target="_blank" rel="noopener">
+            <img src="../imgs/Merch/Drop2/Hoodies/GageBack.JPG" alt="Phantom hoodie back shot">
+        </a>
+        
     </div>
+
+    <button class="scroll-btn next" id="scrollNext" aria-label="Scroll right">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
 </div>
 
 <!-- FOOTER -->
@@ -216,6 +269,35 @@
             img.closest('.photo-card')?.remove();
         });
     });
+
+    const scroller = document.getElementById('photoScroll');
+    const prevBtn = document.getElementById('scrollPrev');
+    const nextBtn = document.getElementById('scrollNext');
+
+    function scrollByAmount(dir) {
+        scroller.scrollBy({ left: dir * (scroller.clientWidth * 0.7), behavior: 'smooth' });
+    }
+    prevBtn.addEventListener('click', () => scrollByAmount(-1));
+    nextBtn.addEventListener('click', () => scrollByAmount(1));
+
+    // Let a plain vertical mouse wheel/trackpad scroll move the gallery horizontally
+    scroller.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            scroller.scrollLeft += e.deltaY;
+        }
+    }, { passive: false });
+
+    function updateArrowVisibility() {
+        prevBtn.style.opacity = scroller.scrollLeft <= 4 ? '0.3' : '1';
+        prevBtn.style.pointerEvents = scroller.scrollLeft <= 4 ? 'none' : 'auto';
+        const atEnd = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 4;
+        nextBtn.style.opacity = atEnd ? '0.3' : '1';
+        nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
+    }
+    scroller.addEventListener('scroll', updateArrowVisibility);
+    window.addEventListener('resize', updateArrowVisibility);
+    updateArrowVisibility();
 </script>
 
 </body>
