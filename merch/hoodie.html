@@ -332,11 +332,11 @@
 
 <!-- NAV -->
 <nav>
-    <a href="../newSite/newtest.html" class="nav-logo"><img src="../imgs/frontembossed.png" alt="PHANTOM"></a>
+    <a href="../index.html" class="nav-logo"><img src="../imgs/frontembossed.png" alt="PHANTOM"></a>
     <ul class="nav-links">
-        <li><a href="../newSite/media.html">Media</a></li>
-        <li><a href="../newSite/merchList.html">Shop</a></li>
-        <li><a href="../newSite/newtest.html#contact">Contact</a></li>
+        <li><a href="../media.html">Media</a></li>
+        <li><a href="../merchList.html">Shop</a></li>
+        <li><a href="../index.html">Contact</a></li>
     </ul>
     <div class="nav-social">
         <a href="https://instagram.com/phantom.nwa" target="_blank" rel="noopener">IG</a>
@@ -429,7 +429,7 @@
 
     const API_BASE = 'https://checkout.phantomnwa.shop';
 
-    let currentColor = '';
+    let currentColor = 'white';
     let currentSize  = 'M';
 
     let inventory = {};
@@ -642,7 +642,7 @@
             window.PhantomCart.addItem({
                 id: freshVariant.catalogId,
                 name: PRODUCT_NAME,
-                color: currentColor,
+                color: '',
                 size: currentSize,
                 price: freshVariant.price,
                 image: PRODUCT_IMG,
@@ -680,7 +680,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cart: [{ id: freshVariant.catalogId, qty: 1, color: currentColor, size: currentSize }]
+                    cart: [{ id: freshVariant.catalogId, qty: 1, color: '', size: currentSize }]
                 })
             });
             const data = await response.json();
