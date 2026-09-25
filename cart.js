@@ -1290,7 +1290,7 @@
     window.addEventListener('pageshow', function (e) {
     console.log('[PhantomCart] pageshow fired, persisted:', e.persisted, 'cart:', getCart().length);
     refreshCartUI();
-});
+    });
 
     // ── Fallback: tab visibility change ───────────────────────────────────────
     // Belt-and-suspenders for browsers/cases where pageshow's bfcache
