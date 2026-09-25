@@ -347,7 +347,7 @@
         document.getElementById('ph-close').addEventListener('click', closeDrawer);
         document.getElementById('ph-overlay').addEventListener('click', closeDrawer);
         injectCartIcon();
-        renderDrawer();
+        refreshCartUI();
     }
 
     if (document.readyState === 'loading') {
@@ -452,21 +452,23 @@
             </div>`;
     }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderCartPage);
-} else {
-    renderCartPage();
+function refreshCartUI() {
+    // Give Safari a moment to finish restoring the page DOM
+    requestAnimationFrame(() => {
+        renderDrawer();
+        renderCartPage();
+    });
 }
 
-// Safari Back/Forward cache fix
-window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-        window.location.reload();
-        return;
-    }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', refreshCartUI);
+} else {
+    refreshCartUI();
+}
 
-    renderDrawer();
-    renderCartPage();
+// Safari / browser back-forward cache
+window.addEventListener('pageshow', function () {
+    refreshCartUI();
 });
 
 })();
