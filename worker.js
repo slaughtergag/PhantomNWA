@@ -84,7 +84,7 @@ export default {
         }
 
         const squareResponse = await fetch(
-          "https://connect.squareup.com/v2/inventory/counts/batch-retrieve",
+          "https://connect.squareup.com/v2/online-checkout/payment-links",
           {
             method: "POST",
             headers: {
@@ -93,9 +93,16 @@ export default {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              catalog_object_ids: catalogObjectIds,
-              location_ids: [env.SQUARE_LOCATION_ID],
-              states: ["IN_STOCK"]
+              idempotency_key: crypto.randomUUID(),
+
+              order: {
+                location_id: env.SQUARE_LOCATION_ID,
+                line_items: lineItems
+              },
+
+              checkout_options: {
+                ask_for_shipping_address: true
+              }
             })
           }
         );
