@@ -453,8 +453,27 @@
     }
 
 function refreshCartUI() {
-    // Give Safari a moment to finish restoring the page DOM
     requestAnimationFrame(() => {
+
+        // Recreate drawer if Safari restored the page without it
+        if (!document.getElementById('ph-drawer')) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = buildDrawerHTML();
+
+            Array.from(tmp.children).forEach(el => {
+                document.body.appendChild(el);
+            });
+
+            document.getElementById('ph-close').addEventListener('click', closeDrawer);
+            document.getElementById('ph-overlay').addEventListener('click', closeDrawer);
+        }
+
+        // Recreate cart button if necessary
+        if (!document.getElementById('ph-cart-btn')) {
+            injectCartIcon();
+        }
+
+        // Re-read localStorage and update everything
         renderDrawer();
         renderCartPage();
     });
@@ -469,6 +488,13 @@ if (document.readyState === 'loading') {
 // Safari / browser back-forward cache
 window.addEventListener('pageshow', function () {
     refreshCartUI();
+});
+
+// Also refresh when Safari makes the page visible again
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+        refreshCartUI();
+    }
 });
 
 })();
