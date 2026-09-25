@@ -1287,12 +1287,10 @@
     // frozen and thawed as-is, so localStorage-backed UI needs an explicit
     // re-sync here — DOMContentLoaded will NOT fire again in this case.
 
-    window.addEventListener(
-        'pageshow',
-        function () {
-            refreshCartUI();
-        }
-    );
+    window.addEventListener('pageshow', function (e) {
+    console.log('[PhantomCart] pageshow fired, persisted:', e.persisted, 'cart:', getCart().length);
+    refreshCartUI();
+});
 
     // ── Fallback: tab visibility change ───────────────────────────────────────
     // Belt-and-suspenders for browsers/cases where pageshow's bfcache
